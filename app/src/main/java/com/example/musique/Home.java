@@ -84,7 +84,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                     break;
 
                 case R.id.layout_folders:
-                    Toast.makeText(this, "Folders", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(this, Test.class));
                     break;
 
                 case R.id.layout_favourites:

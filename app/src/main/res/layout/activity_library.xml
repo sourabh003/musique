@@ -30,17 +30,38 @@
             <TextView
                 android:id="@+id/title"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:minHeight="?actionBarSize"
                 android:fontFamily="@font/ubuntu_bold"
+                android:gravity="center"
+                android:visibility="visible"
+                android:minHeight="?actionBarSize"
                 android:text="Library"
                 android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
 
+            <EditText
+                android:id="@+id/search_bar"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/background_search_bar"
+                android:layout_margin="6dp"
+                android:visibility="gone"
+                android:hint="Search song"
+                android:backgroundTint="@color/white"
+                android:textColorHint="@color/DarkGray"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:textColor="@color/Gray"
+                android:fontFamily="@font/ubuntu"/>
+
             <ImageView
+                android:id="@+id/btn_search"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
                 android:padding="15dp"
                 android:src="@drawable/ic_baseline_search_24" />
 
@@ -49,9 +70,9 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:theme="@style/CustomTab"
             android:layout_height="wrap_content"
-            android:background="@color/colorLibrary" />
+            android:background="@color/colorLibrary"
+            android:theme="@style/CustomTab" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager
