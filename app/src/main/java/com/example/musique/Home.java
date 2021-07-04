@@ -4,8 +4,11 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,11 +21,17 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import static com.example.musique.service.PlayerService.currentSong;
+import static com.example.musique.service.PlayerService.mediaPlayer;
+
 public class Home extends AppCompatActivity implements View.OnClickListener {
 
     String TAG = "Home";
     LinearLayout layoutLibraries, layoutFolders, layoutFavourites;
     LinearLayout layoutParent;
+    LinearLayout layoutMiniPlayer;
+    TextView txtSongNameMiniPlayer, txtSongArtistMiniPlayer;
+    ImageView btnPlayMiniPlayer, btnNextMiniPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +45,13 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         layoutFolders = findViewById(R.id.layout_folders);
         layoutFolders.setOnClickListener(this);
         layoutParent = findViewById(R.id.layout_parent);
+        layoutMiniPlayer = findViewById(R.id.layout_miniplayer);
+        txtSongNameMiniPlayer = findViewById(R.id.song_title_miniplayer);
+        txtSongArtistMiniPlayer = findViewById(R.id.song_artist_miniplayer);
+        btnPlayMiniPlayer = findViewById(R.id.btn_play_miniplayer);
+        btnPlayMiniPlayer.setOnClickListener(this);
+        btnNextMiniPlayer = findViewById(R.id.btn_next_miniplayer);
+        btnNextMiniPlayer.setOnClickListener(this);
 
     }
 
@@ -47,6 +63,19 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                 requestStoragePermission();
             }).show();
         }
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            initMediaPlayer();
+        } else {
+            layoutMiniPlayer.setVisibility(View.GONE);
+        }
+    }
+
+    private void initMediaPlayer() {
+        txtSongNameMiniPlayer.setText(currentSong.getTitle());
+        txtSongArtistMiniPlayer.setText(currentSong.getArtist());
+        btnPlayMiniPlayer.setImageDrawable(getDrawable(R.drawable.ic_baseline_pause_24));
+        layoutMiniPlayer.setVisibility(View.VISIBLE);
+
     }
 
     private void requestStoragePermission() {
@@ -89,6 +118,16 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
                 case R.id.layout_favourites:
                     Toast.makeText(this, "Favourites", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case R.id.btn_play_miniplayer:
+                    if (mediaPlayer.isPlaying()) {
+                        mediaPlayer.pause();
+                        btnPlayMiniPlayer.setImageDrawable(getDrawable(R.drawable.ic_baseline_play_arrow_24));
+                    } else {
+                        mediaPlayer.start();
+                        btnPlayMiniPlayer.setImageDrawable(getDrawable(R.drawable.ic_baseline_pause_24));
+                    }
                     break;
             }
         } else {

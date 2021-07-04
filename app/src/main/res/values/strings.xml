@@ -9,4 +9,6 @@
     <string name="tracks">Tracks</string>
     <string name="albums">Albums</string>
     <string name="now_playing">Now Playing</string>
+    <string name="song_title">Song Title</string>
+    <string name="artist_title">Artist Title</string>
 </resources>
