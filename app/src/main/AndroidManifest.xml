@@ -15,6 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Musique">
         <activity
+            android:name=".PlaylistSongs"
+            android:theme="@style/Theme.Design.NoActionBar" />
+        <activity
+            android:name=".Playlists"
+            android:theme="@style/Theme.Design.NoActionBar" />
+        <activity
             android:name=".FolderSongs"
             android:theme="@style/Theme.Design.NoActionBar" />
         <activity

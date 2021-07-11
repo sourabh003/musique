@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.musique.database.Database;
 import com.example.musique.helpers.Playlist;
 import com.example.musique.service.PlayerService;
+import com.example.musique.utility.Constants;
 import com.example.musique.utility.Functions;
 import com.google.android.material.snackbar.Snackbar;
 import com.karumi.dexter.Dexter;
@@ -30,8 +31,6 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
-
-import java.util.ArrayList;
 
 import static com.example.musique.service.PlayerService.currentSong;
 import static com.example.musique.service.PlayerService.mediaPlayer;
@@ -104,7 +103,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void loadPlaylists() {
-        if (checkStoragePermission()) {
+        if (checkStoragePermission() && playListView.getChildCount() == 0) {
             final Handler handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(() -> {
                 for (Playlist playlist : database.getPlaylists()) {
@@ -115,18 +114,17 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void addNewPlaylist(Playlist playlist) {
-        if (playListView.getChildCount() <= 3) {
+        if (playListView.getChildCount() <= 2) {
             View view = getLayoutInflater().inflate(R.layout.list_item_playlist, null);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
-            int margins = Functions.getValueInDP(7, this);
+            int margins = Functions.getValueInDP(10, this);
             params.setMargins(margins, 0, 0, margins);
             view.setLayoutParams(params);
-
             TextView txtPlaylistName = view.findViewById(R.id.txt_playlist_name);
             LinearLayout layoutParent = view.findViewById(R.id.layout_parent);
             txtPlaylistName.setText(playlist.getName());
             layoutParent.setOnClickListener(v -> {
-                Toast.makeText(this, "" + playlist.getId(), Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, PlaylistSongs.class).putExtra(Constants.PLAYLIST_OBJECT, playlist));
             });
             playListView.addView(view);
         }
@@ -200,6 +198,10 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                 case R.id.btn_create_playlist:
                     showCreatePlaylistDialog();
                     break;
+
+                case R.id.btn_all_playlists:
+                    startActivity(new Intent(this, Playlists.class));
+                    break;
             }
         } else {
             Toast.makeText(this, "Please grant Storage Permission first", Toast.LENGTH_SHORT).show();
@@ -208,7 +210,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
     public void showCreatePlaylistDialog() {
         final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.create_playlist_form);
+        dialog.setContentView(R.layout.dialog_create_playlist);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setCancelable(false);
 
@@ -220,8 +222,9 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
             if (!name.isEmpty()) {
                 dialog.dismiss();
                 Functions.closeKeyboard(this);
-                String id = database.createPlaylist(name);
-                addNewPlaylist(new Playlist(id, name));
+                String time = String.valueOf(System.currentTimeMillis());
+                String id = database.createPlaylist(name, time);
+                addNewPlaylist(new Playlist(id, name, time));
                 Toast.makeText(this, "Playlist Created!", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Invalid Name!", Toast.LENGTH_SHORT).show();

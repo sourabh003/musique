@@ -130,6 +130,49 @@ public class SongsHandler {
         return trackList;
     }
 
+    public static ArrayList<Song> getSongsByID(Context context, ArrayList<String> songIDList){
+        ArrayList<Song> trackList = new ArrayList<>();
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String selection =
+                MediaStore.Audio.Media.IS_MUSIC + "=? AND "
+                        + MediaStore.Audio.Media.IS_RINGTONE + "=? AND "
+                        + MediaStore.Audio.Media.IS_ALARM + "=? AND "
+                        + MediaStore.Audio.Media.IS_NOTIFICATION + "=?";
+        String[] selectionArgs = new String[]{"1", "0", "0", "0"};
+        Cursor cursor = context.getContentResolver().query(uri, new String[]{
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.ALBUM,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.ALBUM_ID
+        }, selection, selectionArgs, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                String id = cursor.getString(0);
+                if (songIDList.contains(id)) {
+                    String album = cursor.getString(1);
+                    String title = cursor.getString(2);
+                    String data = cursor.getString(3);
+                    String artist = cursor.getString(4);
+                    if (artist.equals(Constants.UNKNOWN_ARTIST)) {
+                        artist = "Unknown Artist";
+                    }
+                    if (!album.toLowerCase().equals("ringtones")
+                            || !album.toLowerCase().equals("ringtone")
+                            || !album.toLowerCase().equals("call_rec")) {
+                        if (!title.contains("ringtone")) {
+                            Song song = new Song(id, title, artist, album, data);
+                            trackList.add(song);
+                        }
+                    }
+                }
+            }
+            cursor.close();
+        }
+        return trackList;
+    }
+
     public static ArrayList<Song> getFavouriteSongs(Context context) {
         String TAG = "SongsHandler";
         ArrayList<Song> trackList = new ArrayList<>();

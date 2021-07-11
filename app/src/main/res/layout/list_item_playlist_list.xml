@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <CheckBox
+        android:id="@+id/playlist_checkbox"
+        android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        android:elevation="7dp"
+        android:background="@color/WhiteSmoke"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ubuntu_bold"
+        android:text="@string/playlist_name"
+        android:padding="10dp"
+        android:layout_gravity="center" />
+
+</LinearLayout>

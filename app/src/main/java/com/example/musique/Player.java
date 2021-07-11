@@ -1,12 +1,17 @@
 package com.example.musique;
 
+import android.app.Dialog;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -15,9 +20,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.musique.database.Database;
+import com.example.musique.helpers.Playlist;
 import com.example.musique.service.PlayerService;
 import com.example.musique.utility.Constants;
 import com.example.musique.utility.Functions;
+
+import java.util.ArrayList;
 
 import static com.example.musique.service.PlayerService.currentSong;
 import static com.example.musique.service.PlayerService.isLibraryRepeating;
@@ -216,7 +224,44 @@ public class Player extends AppCompatActivity implements View.OnClickListener {
             case R.id.btn_like:
                 updateSongFavourite();
                 break;
+
+            case R.id.btn_add_to_playlist:
+                showAddToPlaylistDialog();
+                break;
         }
+    }
+
+    private void showAddToPlaylistDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_add_to_playlist);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCancelable(false);
+
+        ArrayList<String> addToPlaylistList = new ArrayList<>();
+        addToPlaylistList.clear();
+        LinearLayout playlistList = dialog.findViewById(R.id.playlist_list);
+        for (Playlist playlist : database.getPlaylists()) {
+            View view = getLayoutInflater().inflate(R.layout.list_item_playlist_list, null);
+            CheckBox checkBox = view.findViewById(R.id.playlist_checkbox);
+            checkBox.setText(playlist.getName());
+            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    addToPlaylistList.add(playlist.getId());
+                } else {
+                    addToPlaylistList.remove(playlist.getId());
+                }
+            });
+            playlistList.addView(view);
+        }
+        ImageView btnClosePlaylistDialog = dialog.findViewById(R.id.btn_close_playlist_dialog);
+        Button btnAdd = dialog.findViewById(R.id.btn_add);
+        btnAdd.setOnClickListener(v -> {
+            database.addSongToPlaylist(addToPlaylistList, currentSong.getId());
+            Toast.makeText(this, "Song added to Playlist(s)", Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
+        });
+        btnClosePlaylistDialog.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
     }
 
     @Override

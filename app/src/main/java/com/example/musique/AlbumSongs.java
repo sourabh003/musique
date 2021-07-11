@@ -44,12 +44,12 @@ public class AlbumSongs extends AppCompatActivity implements SwipeRefreshLayout.
         album = (Album) getIntent().getSerializableExtra(Constants.ALBUM_OBJECT);
 
         btnBack = findViewById(R.id.btn_back);
-        txtAlbumArtist = findViewById(R.id.txt_album_artist);
+        txtAlbumArtist = findViewById(R.id.txt_playlist_created_date);
         loading = findViewById(R.id.loading);
         txtAlbumArtist.setText(album.getArtist());
         txtAlbumName = findViewById(R.id.txt_album_name);
         txtAlbumName.setText(album.getName());
-        txtSongsCount = findViewById(R.id.txt_album_songs_count);
+        txtSongsCount = findViewById(R.id.txt_playlist_songs_count);
         txtSongsCount.setText(album.getSongsCount() + " Songs");
         albumTrackListView = findViewById(R.id.album_track_list);
         albumTrackListView.setLayoutManager(new LinearLayoutManager(this));

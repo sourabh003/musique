@@ -14,4 +14,5 @@ public class Constants {
     public static final String SEPERATER = "======================";
     public static final String FOLDER_ID = "folder_id";
     public static final String FOLDER = "folder";
+    public static final String PLAYLIST_OBJECT = "PASSING_PLAYLIST_OBJECT";
 }

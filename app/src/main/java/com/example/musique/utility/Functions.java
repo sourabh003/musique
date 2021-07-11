@@ -13,6 +13,7 @@ import com.example.musique.helpers.Song;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -30,6 +31,16 @@ public class Functions {
         } else {
             loading.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public static String getModifiedDate(String time) {
+        Calendar calendar = Calendar.getInstance();
+        String[] months = new String[]{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+        calendar.setTimeInMillis(Long.parseLong(time));
+        int mYear = calendar.get(Calendar.YEAR);
+        int mMonth = calendar.get(Calendar.MONTH);
+        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        return mDay + "/" + months[mMonth - 1] + "/" + mYear;
     }
 
     public static String generateID() {

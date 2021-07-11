@@ -118,24 +118,23 @@
                 android:elevation="8dp"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                android:orientation="horizontal"
-                android:padding="20dp">
+                android:orientation="vertical"
+                android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="50dp"
+                    android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_gravity="end"
+                    android:padding="10dp"
+                    android:layout_gravity="center"
                     android:src="@drawable/ic_baseline_folder_24"
                     app:tint="@color/white" />
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginStart="10dp"
-                    android:layout_weight="1"
                     android:fontFamily="@font/ubuntu"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:padding="5dp"
                     android:text="@string/folders"
                     android:textColor="@color/white"
@@ -154,23 +153,23 @@
                 android:elevation="8dp"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                android:orientation="horizontal"
-                android:padding="20dp">
+                android:orientation="vertical"
+                android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="50dp"
+                    android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:layout_gravity="center"
                     android:src="@drawable/ic_baseline_favorite_24"
                     app:tint="@color/white" />
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginStart="10dp"
-                    android:layout_weight="1"
                     android:fontFamily="@font/ubuntu"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:padding="5dp"
                     android:text="@string/favourites"
                     android:textColor="@color/white"
@@ -216,6 +215,7 @@
             android:id="@+id/playlists_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal"
             android:padding="10dp" />
 
@@ -230,6 +230,7 @@
             android:clickable="true"
             android:drawableEnd="@drawable/ic_baseline_arrow_forward_24"
             android:drawableTint="@color/white"
+            android:onClick="onClick"
             android:focusable="true"
             android:fontFamily="@font/ubuntu_bold"
             android:foreground="?attr/selectableItemBackground"

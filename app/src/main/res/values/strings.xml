@@ -18,8 +18,10 @@
     <string name="edit_album">Edit Album</string>
     <string name="play_all">Play All</string>
     <string name="folder_name">Folder Name</string>
-    <string name="playlists">Playlists</string>
     <string name="playlist">Playlist</string>
     <string name="all_playlists">All Playlists</string>
     <string name="create_new_playlist">Create new playlist</string>
+    <string name="playlists">Playlists</string>
+    <string name="playlist_name">Playlist Name</string>
+    <string name="created_on">Created on :</string>
 </resources>

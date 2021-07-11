@@ -1,13 +1,25 @@
 package com.example.musique.helpers;
 
-public class Playlist {
+import java.io.Serializable;
+
+public class Playlist implements Serializable {
 
     String id;
     String name;
+    String createdDate;
 
-    public Playlist(String id, String name) {
+    public Playlist(String id, String name, String createdDate) {
         this.id = id;
         this.name = name;
+        this.createdDate = createdDate;
+    }
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
     }
 
     public String getId() {
