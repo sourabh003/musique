@@ -174,11 +174,15 @@
     <LinearLayout
         android:id="@+id/layout_miniplayer"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="onClick"
+        android:foreground="?attr/selectableItemBackground"
         android:layout_alignParentBottom="true"
-        android:visibility="gone"
-        android:layout_margin="5dp"
-        android:background="@color/black"
+        android:visibility="visible"
+        android:background="@drawable/gradient4"
+        android:padding="5dp"
         android:elevation="3dp"
         android:orientation="horizontal">
 
@@ -188,9 +192,10 @@
             android:src="@drawable/default_album_art_2" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:padding="5dp"
             android:orientation="vertical">
 
             <TextView

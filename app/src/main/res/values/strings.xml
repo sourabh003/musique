@@ -11,4 +11,11 @@
     <string name="now_playing">Now Playing</string>
     <string name="song_title">Song Title</string>
     <string name="artist_title">Artist Title</string>
+    <string name="album">Album</string>
+    <string name="album_name">Album Name</string>
+    <string name="album_artist">Album Artist</string>
+    <string name="number_of_songs">0 Songs</string>
+    <string name="edit_album">Edit Album</string>
+    <string name="play_all">Play All</string>
+    <string name="folder_name">Folder Name</string>
 </resources>

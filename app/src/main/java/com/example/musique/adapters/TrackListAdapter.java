@@ -2,11 +2,6 @@ package com.example.musique.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +35,7 @@ public class TrackListAdapter extends RecyclerView.Adapter<TrackListAdapter.View
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View listItem = layoutInflater.inflate(R.layout.track_list_item, parent, false);
+        View listItem = layoutInflater.inflate(R.layout.list_item_tracks, parent, false);
         return new ViewHolder(listItem);
     }
 
@@ -52,22 +47,12 @@ public class TrackListAdapter extends RecyclerView.Adapter<TrackListAdapter.View
         holder.parentView.setOnClickListener(v -> {
             PlayerService.currentSong = song;
             PlayerService.songIndex = position;
+            PlayerService.tracksList.clear();
+            PlayerService.tracksList.addAll(trackList);
             context.startActivity(new Intent(context, Player.class));
         });
 
     }
-
-//    private Bitmap getAlbumArtImage(Song song) {
-//            MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
-//            metadataRetriever.setDataSource("files://" + song.getData());
-//            byte[] art = metadataRetriever.getEmbeddedPicture();
-//            if (art == null){
-//                return null;
-//            }
-//            metadataRetriever.release();
-//            metadataRetriever.close();
-//            return BitmapFactory.decodeByteArray(art, 0, art.length);
-//    }
 
     @Override
     public int getItemCount() {

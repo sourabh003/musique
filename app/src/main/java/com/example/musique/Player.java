@@ -1,8 +1,8 @@
 package com.example.musique;
 
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.musique.database.Database;
 import com.example.musique.service.PlayerService;
 import com.example.musique.utility.Constants;
 import com.example.musique.utility.Functions;
@@ -30,14 +31,14 @@ public class Player extends AppCompatActivity implements View.OnClickListener {
     ImageView imgAlbumArt, btnBack, btnPlay, btnNext, btnPrevious, btnRepeat, btnAddToPlaylist, btnLike;
     TextView songStartTimeStamp, songEndTimeStamp;
     SeekBar playerSeekBar;
-
-    boolean isSongFavourite = false;
+    Database database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
+        database = new Database(this);
         btnLike = findViewById(R.id.btn_like);
         btnLike.setOnClickListener(this);
         btnRepeat = findViewById(R.id.btn_repeat);
@@ -96,52 +97,9 @@ public class Player extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void loadMediaPlayer() {
-        if (Functions.getLatestSong(this).getId().equals(currentSong.getId())){
-            if (mediaPlayer == null){
-                mediaPlayer = MediaPlayer.create(this, Uri.parse(currentSong.getData()));
-                mediaPlayer.setOnCompletionListener(mp -> {
-                    if (isLibraryRepeating) {
-                        changeSong(Constants.NEXT_SONG);
-                    } else {
-                        if (!mediaPlayer.isLooping()) {
-                            mediaPlayer.seekTo(0);
-                            mediaPlayer.pause();
-                            updatePlayButton();
-                        }
-                    }
-                });
-                mediaPlayer.setOnPreparedListener(mp -> {
-                    mediaPlayer.start();
-                    updatePlayButton();
-                });
-            } else {
-                if (!mediaPlayer.isPlaying()){
-                    mediaPlayer.start();
-                }
-            }
-        } else {
-            if (mediaPlayer != null) {
-                mediaPlayer.stop();
-                mediaPlayer.reset();
-                mediaPlayer.release();
-            }
-            mediaPlayer = MediaPlayer.create(this, Uri.parse(currentSong.getData()));
-            mediaPlayer.setOnCompletionListener(mp -> {
-                if (isLibraryRepeating) {
-                    changeSong(Constants.NEXT_SONG);
-                } else {
-                    if (!mediaPlayer.isLooping()) {
-                        mediaPlayer.seekTo(0);
-                        mediaPlayer.pause();
-                        updatePlayButton();
-                    }
-                }
-            });
-            mediaPlayer.setOnPreparedListener(mp -> {
-                mediaPlayer.start();
-                updatePlayButton();
-            });
-        }
+        PlayerService.loadMediaPlayer(this);
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(this::updateUI, 100);
         Functions.updateLatestSong(this, currentSong);
         playerSeekBar.setMax(mediaPlayer.getDuration());
         songEndTimeStamp.setText(Functions.getModifiedDuration(mediaPlayer.getDuration()));
@@ -165,6 +123,7 @@ public class Player extends AppCompatActivity implements View.OnClickListener {
         songEndTimeStamp.setText(Functions.getModifiedDuration(mediaPlayer.getDuration()));
         updatePlayButton();
         updateLoopButton();
+        updateLikeButton();
     }
 
     private void updateRepeatAction() {
@@ -206,17 +165,23 @@ public class Player extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void updateSongFavourite() {
-        isSongFavourite = !isSongFavourite;
+        if (PlayerService.favouriteSongsList.contains(currentSong.getId())) {
+            PlayerService.favouriteSongsList.remove(currentSong.getId());
+            database.removeSongFromFavourites(currentSong.getId());
+            Toast.makeText(this, "Removed from Favourites", Toast.LENGTH_SHORT).show();
+        } else {
+            database.addSongToFavourites(currentSong.getId());
+            PlayerService.favouriteSongsList.add(currentSong.getId());
+            Toast.makeText(this, "Added to Favourites", Toast.LENGTH_SHORT).show();
+        }
         updateLikeButton();
     }
 
     private void updateLikeButton() {
-        if (isSongFavourite) {
+        if (PlayerService.favouriteSongsList.contains(currentSong.getId())) {
             btnLike.setImageDrawable(getDrawable(R.drawable.ic_baseline_favorite_red_24));
-            Toast.makeText(this, "Added to Favourites", Toast.LENGTH_SHORT).show();
         } else {
             btnLike.setImageDrawable(getDrawable(R.drawable.ic_baseline_favorite_border_24));
-            Toast.makeText(this, "Removed from Favourites", Toast.LENGTH_SHORT).show();
         }
     }
 

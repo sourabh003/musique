@@ -1,10 +1,10 @@
 package com.example.musique;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.musique.database.Database;
+import com.example.musique.service.PlayerService;
 import com.google.android.material.snackbar.Snackbar;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -32,12 +34,14 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     LinearLayout layoutMiniPlayer;
     TextView txtSongNameMiniPlayer, txtSongArtistMiniPlayer;
     ImageView btnPlayMiniPlayer, btnNextMiniPlayer;
+    Database database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        database = new Database(this);
         layoutLibraries = findViewById(R.id.layout_libraries);
         layoutLibraries.setOnClickListener(this);
         layoutFavourites = findViewById(R.id.layout_favourites);
@@ -55,6 +59,15 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private void updateMiniPlayerPlayButton() {
+        if (mediaPlayer.isPlaying()) {
+            btnPlayMiniPlayer.setImageDrawable(getDrawable(R.drawable.ic_baseline_pause_24));
+        } else {
+            btnPlayMiniPlayer.setImageDrawable(getDrawable(R.drawable.ic_baseline_play_arrow_24));
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -63,19 +76,21 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                 requestStoragePermission();
             }).show();
         }
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+        if (mediaPlayer != null) {
             initMediaPlayer();
         } else {
             layoutMiniPlayer.setVisibility(View.GONE);
         }
+        new Thread(() -> {
+            PlayerService.favouriteSongsList.addAll(database.getFavouriteSongs());
+        }).start();
     }
 
     private void initMediaPlayer() {
         txtSongNameMiniPlayer.setText(currentSong.getTitle());
         txtSongArtistMiniPlayer.setText(currentSong.getArtist());
-        btnPlayMiniPlayer.setImageDrawable(getDrawable(R.drawable.ic_baseline_pause_24));
         layoutMiniPlayer.setVisibility(View.VISIBLE);
-
+        updateMiniPlayerPlayButton();
     }
 
     private void requestStoragePermission() {
@@ -113,25 +128,38 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                     break;
 
                 case R.id.layout_folders:
-                    startActivity(new Intent(this, Test.class));
+                    startActivity(new Intent(this, Folders.class));
                     break;
 
                 case R.id.layout_favourites:
-                    Toast.makeText(this, "Favourites", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(this, Favorites.class));
                     break;
 
                 case R.id.btn_play_miniplayer:
-                    if (mediaPlayer.isPlaying()) {
-                        mediaPlayer.pause();
-                        btnPlayMiniPlayer.setImageDrawable(getDrawable(R.drawable.ic_baseline_play_arrow_24));
-                    } else {
-                        mediaPlayer.start();
-                        btnPlayMiniPlayer.setImageDrawable(getDrawable(R.drawable.ic_baseline_pause_24));
-                    }
+                    updateMiniPlayerAction();
+                    break;
+
+                case R.id.layout_miniplayer:
+                    startActivity(new Intent(this, Player.class));
+                    break;
+
+                case R.id.btn_next_miniplayer:
+                    PlayerService.nextSong();
+                    PlayerService.loadMediaPlayer(this);
+                    initMediaPlayer();
                     break;
             }
         } else {
             Toast.makeText(this, "Please grant Storage Permission first", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void updateMiniPlayerAction() {
+        if (mediaPlayer.isPlaying()){
+            mediaPlayer.pause();
+        } else {
+            mediaPlayer.start();
+        }
+        updateMiniPlayerPlayButton();
     }
 }

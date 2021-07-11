@@ -75,4 +75,16 @@ public class Functions {
         }
         return duration;
     }
+
+    public static String encryptName(String id, String album) {
+        return album + Constants.SEPERATER + id;
+    }
+
+    public static String decryptName(String encryptedName){
+        return encryptedName.split(Constants.SEPERATER)[0];
+    }
+
+    public static String decryptID(String encryptedName) {
+        return encryptedName.split(Constants.SEPERATER)[1];
+    }
 }

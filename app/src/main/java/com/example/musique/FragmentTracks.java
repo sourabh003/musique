@@ -2,6 +2,8 @@ package com.example.musique;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.musique.adapters.TrackListAdapter;
+import com.example.musique.helpers.Song;
 import com.example.musique.utility.Functions;
 import com.example.musique.utility.SongsHandler;
 
-import static com.example.musique.service.PlayerService.tracksList;
+import java.util.ArrayList;
 
 public class FragmentTracks extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -29,6 +32,7 @@ public class FragmentTracks extends Fragment implements SwipeRefreshLayout.OnRef
     ProgressBar loading;
     TrackListAdapter adapter;
 
+    ArrayList<Song> tracksList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -48,12 +52,15 @@ public class FragmentTracks extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public void onStart() {
         super.onStart();
-        Functions.showLoading(true, loading);
-        if (SongsHandler.getSongs(activity).size() != tracksList.size()) {
-            tracksList.addAll(SongsHandler.getSongs(activity));
+        if (tracksList.isEmpty()){
+            final Handler handler = new Handler(Looper.getMainLooper());
+            Functions.showLoading(true, loading);
+            handler.postDelayed(() -> {
+                tracksList.addAll(SongsHandler.getSongs(activity));
+                adapter.notifyDataSetChanged();
+                Functions.showLoading(false, loading);
+            }, 1500);
         }
-        adapter.notifyDataSetChanged();
-        Functions.showLoading(false, loading);
     }
 
     @Override
@@ -64,6 +71,5 @@ public class FragmentTracks extends Fragment implements SwipeRefreshLayout.OnRef
         adapter.notifyDataSetChanged();
         Functions.showLoading(false, loading);
         swipeRefreshLayout.setRefreshing(false);
-        Toast.makeText(activity, "Refreshed", Toast.LENGTH_SHORT).show();
     }
 }

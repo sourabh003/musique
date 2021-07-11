@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="3dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:background="@color/colorPrimaryDark"
+    android:elevation="4dp"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:padding="5dp"
+        android:src="@drawable/ic_baseline_folder_24"
+        app:tint="@color/Tomato" />
+
+    <TextView
+        android:id="@+id/txt_folder_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/ubuntu_bold"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:text="@string/folder_name"
+        android:textColor="@color/DarkGray"
+        android:textSize="16sp" />
+
+</LinearLayout>

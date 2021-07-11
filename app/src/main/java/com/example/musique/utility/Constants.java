@@ -9,4 +9,9 @@ public class Constants {
     public static final String SONG_DATA = "SONG_DATA";
     public static final String NEXT_SONG = "NEXT_SONG";
     public static final String PREVIOUS_SONG = "PREVIOUS_SONG";
+    public static final String ALBUM_OBJECT = "PASSING_ALBUM_OBJECT";
+    public static final String UNKNOWN_ARTIST = "<unknown>";
+    public static final String SEPERATER = "======================";
+    public static final String FOLDER_ID = "folder_id";
+    public static final String FOLDER = "folder";
 }

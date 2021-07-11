@@ -16,6 +16,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tracks_list_view"
+            tools:listitem="@layout/list_item_tracks"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="5dp" />
