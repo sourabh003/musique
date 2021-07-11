@@ -13,6 +13,7 @@
     <color name="colorPrimaryDark">#282828</color>
     <color name="colorAccent">#AD1457</color>
 
+    <color name="GreyTransparent">#55A0A0A0</color>
     <color name="colorLibrary">#0B92D7</color>
     <color name="MaterialGreen">#16A086</color>
     <color name="MaterialPurple">#5B48A2</color>

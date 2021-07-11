@@ -4,17 +4,16 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 
 import com.example.musique.helpers.Song;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class Functions {
@@ -25,12 +24,22 @@ public class Functions {
         }
     }
 
-    public static void showLoading(boolean show, ProgressBar loading){
-        if (show){
+    public static void showLoading(boolean show, ProgressBar loading) {
+        if (show) {
             loading.setVisibility(View.VISIBLE);
         } else {
             loading.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public static String generateID() {
+        int len = 10;
+        String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%&";
+        Random rnd = new Random();
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++)
+            sb.append(chars.charAt(rnd.nextInt(chars.length())));
+        return sb.toString();
     }
 
     public static void saveToInternalStorage(String data, String filename, Context context) throws IOException {
@@ -80,11 +89,16 @@ public class Functions {
         return album + Constants.SEPERATER + id;
     }
 
-    public static String decryptName(String encryptedName){
+    public static String decryptName(String encryptedName) {
         return encryptedName.split(Constants.SEPERATER)[0];
     }
 
     public static String decryptID(String encryptedName) {
         return encryptedName.split(Constants.SEPERATER)[1];
+    }
+
+    public static int getValueInDP(int sizeInDP, Context context) {
+        return (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, sizeInDP, context.getResources().getDisplayMetrics());
     }
 }

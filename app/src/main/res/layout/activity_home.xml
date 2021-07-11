@@ -103,71 +103,139 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/layout_folders"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/gradient2"
-            android:clickable="true"
-            android:elevation="8dp"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="end"
-                android:padding="30dp"
-                android:src="@drawable/ic_baseline_folder_24"
-                app:tint="@color/white" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
+            <LinearLayout
+                android:id="@+id/layout_folders"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
                 android:layout_weight="1"
-                android:fontFamily="@font/ubuntu"
-                android:gravity="center_vertical"
-                android:padding="5dp"
-                android:text="@string/folders"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:background="@drawable/gradient2"
+                android:clickable="true"
+                android:elevation="8dp"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:orientation="horizontal"
+                android:padding="20dp">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="end"
+                    android:src="@drawable/ic_baseline_folder_24"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/ubuntu"
+                    android:gravity="center_vertical"
+                    android:padding="5dp"
+                    android:text="@string/folders"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_favourites"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/gradient3"
+                android:clickable="true"
+                android:elevation="8dp"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:orientation="horizontal"
+                android:padding="20dp">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_baseline_favorite_24"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/ubuntu"
+                    android:gravity="center_vertical"
+                    android:padding="5dp"
+                    android:text="@string/favourites"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/layout_favourites"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/gradient3"
-            android:clickable="true"
-            android:elevation="8dp"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
+            android:layout_marginTop="5dp"
+            android:background="@color/GreyTransparent"
             android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:padding="30dp"
-                android:src="@drawable/ic_baseline_favorite_24"
-                app:tint="@color/white" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:fontFamily="@font/ubuntu"
-                android:gravity="center_vertical"
-                android:padding="5dp"
-                android:text="@string/favourites"
+                android:fontFamily="@font/ubuntu_bold"
+                android:padding="15dp"
+                android:text="@string/playlists"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/btn_create_playlist"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:onClick="onClick"
+                android:padding="10dp"
+                android:src="@drawable/ic_baseline_add_24"
+                app:tint="@color/white" />
 
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/playlists_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp" />
+
+        <Button
+            android:id="@+id/btn_all_playlists"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/custom_rounded_button"
+            android:clickable="true"
+            android:drawableEnd="@drawable/ic_baseline_arrow_forward_24"
+            android:drawableTint="@color/white"
+            android:focusable="true"
+            android:fontFamily="@font/ubuntu_bold"
+            android:foreground="?attr/selectableItemBackground"
+            android:text="@string/all_playlists"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
 
     </LinearLayout>
 
@@ -175,16 +243,16 @@
         android:id="@+id/layout_miniplayer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:onClick="onClick"
-        android:foreground="?attr/selectableItemBackground"
         android:layout_alignParentBottom="true"
-        android:visibility="visible"
         android:background="@drawable/gradient4"
-        android:padding="5dp"
+        android:clickable="true"
         android:elevation="3dp"
-        android:orientation="horizontal">
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:onClick="onClick"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:visibility="visible">
 
         <ImageView
             android:layout_width="?attr/actionBarSize"
@@ -195,20 +263,20 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:padding="5dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="5dp">
 
             <TextView
                 android:id="@+id/song_title_miniplayer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:singleLine="true"
                 android:ellipsize="marquee"
                 android:fontFamily="@font/ubuntu_bold"
                 android:gravity="center_vertical"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
+                android:singleLine="true"
                 android:text="@string/song_title"
                 android:textColor="@color/white" />
 
@@ -221,9 +289,9 @@
                 android:gravity="center_vertical"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:textSize="12sp"
                 android:text="@string/artist_title"
-                android:textColor="@color/DarkGray" />
+                android:textColor="@color/DarkGray"
+                android:textSize="12sp" />
 
         </LinearLayout>
 

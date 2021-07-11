@@ -24,11 +24,8 @@ import com.example.musique.utility.SongsHandler;
 
 import java.util.ArrayList;
 
-import static com.example.musique.service.PlayerService.currentSong;
-import static com.example.musique.service.PlayerService.songIndex;
 
-
-public class AlbumSongs extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class AlbumSongs extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     Album album;
     ImageView btnBack;
@@ -74,7 +71,6 @@ public class AlbumSongs extends AppCompatActivity implements View.OnClickListene
         }, 1500);
     }
 
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_back:

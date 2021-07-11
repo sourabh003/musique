@@ -2,10 +2,16 @@ package com.example.musique;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,7 +20,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.musique.database.Database;
+import com.example.musique.helpers.Playlist;
 import com.example.musique.service.PlayerService;
+import com.example.musique.utility.Functions;
 import com.google.android.material.snackbar.Snackbar;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -22,6 +30,8 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
+
+import java.util.ArrayList;
 
 import static com.example.musique.service.PlayerService.currentSong;
 import static com.example.musique.service.PlayerService.mediaPlayer;
@@ -35,6 +45,9 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     TextView txtSongNameMiniPlayer, txtSongArtistMiniPlayer;
     ImageView btnPlayMiniPlayer, btnNextMiniPlayer;
     Database database;
+
+    ImageView btnCreatePlaylist;
+    LinearLayout playListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +69,9 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         btnPlayMiniPlayer.setOnClickListener(this);
         btnNextMiniPlayer = findViewById(R.id.btn_next_miniplayer);
         btnNextMiniPlayer.setOnClickListener(this);
+        btnCreatePlaylist = findViewById(R.id.btn_create_playlist);
+
+        playListView = findViewById(R.id.playlists_view);
 
     }
 
@@ -84,13 +100,44 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         new Thread(() -> {
             PlayerService.favouriteSongsList.addAll(database.getFavouriteSongs());
         }).start();
+        loadPlaylists();
+    }
+
+    private void loadPlaylists() {
+        if (checkStoragePermission()) {
+            final Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(() -> {
+                for (Playlist playlist : database.getPlaylists()) {
+                    addNewPlaylist(playlist);
+                }
+            }, 1500);
+        }
+    }
+
+    private void addNewPlaylist(Playlist playlist) {
+        if (playListView.getChildCount() <= 3) {
+            View view = getLayoutInflater().inflate(R.layout.list_item_playlist, null);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
+            int margins = Functions.getValueInDP(7, this);
+            params.setMargins(margins, 0, 0, margins);
+            view.setLayoutParams(params);
+
+            TextView txtPlaylistName = view.findViewById(R.id.txt_playlist_name);
+            LinearLayout layoutParent = view.findViewById(R.id.layout_parent);
+            txtPlaylistName.setText(playlist.getName());
+            layoutParent.setOnClickListener(v -> {
+                Toast.makeText(this, "" + playlist.getId(), Toast.LENGTH_SHORT).show();
+            });
+            playListView.addView(view);
+        }
     }
 
     private void initMediaPlayer() {
         txtSongNameMiniPlayer.setText(currentSong.getTitle());
         txtSongArtistMiniPlayer.setText(currentSong.getArtist());
         layoutMiniPlayer.setVisibility(View.VISIBLE);
-        updateMiniPlayerPlayButton();
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(this::updateMiniPlayerPlayButton, 100);
     }
 
     private void requestStoragePermission() {
@@ -98,6 +145,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
                 Toast.makeText(Home.this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                loadPlaylists();
             }
 
             @Override
@@ -148,14 +196,43 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                     PlayerService.loadMediaPlayer(this);
                     initMediaPlayer();
                     break;
+
+                case R.id.btn_create_playlist:
+                    showCreatePlaylistDialog();
+                    break;
             }
         } else {
             Toast.makeText(this, "Please grant Storage Permission first", Toast.LENGTH_SHORT).show();
         }
     }
 
+    public void showCreatePlaylistDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.create_playlist_form);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCancelable(false);
+
+        EditText inputPlaylistName = dialog.findViewById(R.id.input_playlist_name);
+        ImageView btnClosePlaylistDialog = dialog.findViewById(R.id.btn_close_playlist_dialog);
+        Button btnCreatePlaylist = dialog.findViewById(R.id.btn_create_playlist);
+        btnCreatePlaylist.setOnClickListener(v -> {
+            String name = inputPlaylistName.getText().toString().trim();
+            if (!name.isEmpty()) {
+                dialog.dismiss();
+                Functions.closeKeyboard(this);
+                String id = database.createPlaylist(name);
+                addNewPlaylist(new Playlist(id, name));
+                Toast.makeText(this, "Playlist Created!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Invalid Name!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        btnClosePlaylistDialog.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
+    }
+
     private void updateMiniPlayerAction() {
-        if (mediaPlayer.isPlaying()){
+        if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
         } else {
             mediaPlayer.start();
