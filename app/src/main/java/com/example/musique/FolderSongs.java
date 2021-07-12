@@ -77,7 +77,7 @@ public class FolderSongs extends AppCompatActivity implements SwipeRefreshLayout
     public void onRefresh() {
         tracksList.clear();
         Functions.showLoading(true, loading);
-        tracksList.addAll(SongsHandler.getSongs(this));
+        tracksList.addAll(SongsHandler.getAlbumSongs(Functions.decryptID(folder), this));
         txtFolderSongCount.setText(tracksList.size() + " Songs");
         adapter.notifyDataSetChanged();
         Functions.showLoading(false, loading);

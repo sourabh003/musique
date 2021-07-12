@@ -96,7 +96,7 @@
         android:onClick="onClick"
         android:foreground="?attr/selectableItemBackground"
         android:layout_alignParentBottom="true"
-        android:visibility="visible"
+        android:visibility="gone"
         android:background="@drawable/gradient4"
         android:padding="5dp"
         android:elevation="3dp"

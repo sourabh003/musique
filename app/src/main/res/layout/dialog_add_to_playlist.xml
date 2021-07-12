@@ -39,15 +39,28 @@
         android:layout_height="1dp"
         android:background="@color/Gray" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_no_playlist"
+        android:gravity="center"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:text="No Playlists Found!"
+        android:layout_gravity="center_vertical"/>
+
     <ScrollView
+        android:id="@+id/playlist_list_container"
         android:layout_width="match_parent"
         android:layout_height="250dp">
 
         <LinearLayout
             android:id="@+id/playlist_list"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:orientation="vertical" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </LinearLayout>
+
     </ScrollView>
 
     <Button
@@ -57,10 +70,22 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@color/colorPrimaryDark"
+        android:backgroundTint="@color/colorPrimary"
         android:fontFamily="@font/ubuntu_bold"
         android:text="Add"
+        android:textAllCaps="false"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/btn_create_playlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:fontFamily="@font/ubuntu_bold"
+        android:text="Create New Playlist"
         android:textAllCaps="false"
         android:textColor="@color/white" />
 

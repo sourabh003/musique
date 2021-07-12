@@ -5,9 +5,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -23,7 +26,9 @@ import com.example.musique.database.Database;
 import com.example.musique.helpers.Playlist;
 import com.example.musique.service.PlayerService;
 import com.example.musique.utility.Constants;
+import com.example.musique.utility.DialogHandlers;
 import com.example.musique.utility.Functions;
+import com.example.musique.utility.SongsHandler;
 
 import java.util.ArrayList;
 
@@ -40,6 +45,7 @@ public class Player extends AppCompatActivity implements View.OnClickListener {
     TextView songStartTimeStamp, songEndTimeStamp;
     SeekBar playerSeekBar;
     Database database;
+    Thread seekBarThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +87,8 @@ public class Player extends AppCompatActivity implements View.OnClickListener {
                 mediaPlayer.seekTo(seekBar.getProgress());
             }
         });
-        loadMediaPlayer();
-        new Thread(() -> {
+
+        seekBarThread = new Thread(() -> {
             try {
                 int start = 0;
                 int end = mediaPlayer.getDuration();
@@ -90,18 +96,29 @@ public class Player extends AppCompatActivity implements View.OnClickListener {
                     playerSeekBar.setProgress(mediaPlayer.getCurrentPosition());
                     start = mediaPlayer.getCurrentPosition();
                     Thread.sleep(500);
+                    if (!mediaPlayer.isPlaying()){
+                        runOnUiThread(this::updatePlayButton);
+                    }
                 }
             } catch (InterruptedException e) {
                 Log.e(TAG, "onCreate: SeekBar Thread: ", e);
                 e.printStackTrace();
             }
-        }).start();
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        loadMediaPlayer();
         updateUI();
+        seekBarThread.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        seekBarThread.interrupt();
     }
 
     private void loadMediaPlayer() {
@@ -226,42 +243,9 @@ public class Player extends AppCompatActivity implements View.OnClickListener {
                 break;
 
             case R.id.btn_add_to_playlist:
-                showAddToPlaylistDialog();
+                DialogHandlers.showAddToPlaylistDialog(this, this);
                 break;
         }
-    }
-
-    private void showAddToPlaylistDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog_add_to_playlist);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialog.setCancelable(false);
-
-        ArrayList<String> addToPlaylistList = new ArrayList<>();
-        addToPlaylistList.clear();
-        LinearLayout playlistList = dialog.findViewById(R.id.playlist_list);
-        for (Playlist playlist : database.getPlaylists()) {
-            View view = getLayoutInflater().inflate(R.layout.list_item_playlist_list, null);
-            CheckBox checkBox = view.findViewById(R.id.playlist_checkbox);
-            checkBox.setText(playlist.getName());
-            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked) {
-                    addToPlaylistList.add(playlist.getId());
-                } else {
-                    addToPlaylistList.remove(playlist.getId());
-                }
-            });
-            playlistList.addView(view);
-        }
-        ImageView btnClosePlaylistDialog = dialog.findViewById(R.id.btn_close_playlist_dialog);
-        Button btnAdd = dialog.findViewById(R.id.btn_add);
-        btnAdd.setOnClickListener(v -> {
-            database.addSongToPlaylist(addToPlaylistList, currentSong.getId());
-            Toast.makeText(this, "Song added to Playlist(s)", Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
-        });
-        btnClosePlaylistDialog.setOnClickListener(v -> dialog.dismiss());
-        dialog.show();
     }
 
     @Override

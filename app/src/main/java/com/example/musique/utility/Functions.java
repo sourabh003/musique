@@ -40,7 +40,7 @@ public class Functions {
         int mYear = calendar.get(Calendar.YEAR);
         int mMonth = calendar.get(Calendar.MONTH);
         int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-        return mDay + "/" + months[mMonth - 1] + "/" + mYear;
+        return mDay + "/" + months[mMonth] + "/" + mYear;
     }
 
     public static String generateID() {

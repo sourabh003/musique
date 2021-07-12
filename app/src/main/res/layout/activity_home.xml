@@ -253,7 +253,7 @@
         android:onClick="onClick"
         android:orientation="horizontal"
         android:padding="5dp"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="?attr/actionBarSize"

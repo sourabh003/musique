@@ -2,16 +2,13 @@ package com.example.musique;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,6 +20,7 @@ import com.example.musique.database.Database;
 import com.example.musique.helpers.Playlist;
 import com.example.musique.service.PlayerService;
 import com.example.musique.utility.Constants;
+import com.example.musique.utility.DialogHandlers;
 import com.example.musique.utility.Functions;
 import com.google.android.material.snackbar.Snackbar;
 import com.karumi.dexter.Dexter;
@@ -47,6 +45,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
     ImageView btnCreatePlaylist;
     LinearLayout playListView;
+    Thread miniPlayerThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +71,17 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
         playListView = findViewById(R.id.playlists_view);
 
+        miniPlayerThread = new Thread(() -> {
+            try {
+                while (true) {
+                    runOnUiThread(this::initMediaPlayer);
+                    Thread.sleep(1000);
+                }
+            } catch (InterruptedException e) {
+                Log.e(TAG, "onCreate: Mini Player Thread Exception", e);
+                e.printStackTrace();
+            }
+        });
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -84,6 +94,12 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        miniPlayerThread.interrupt();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         if (!checkStoragePermission()) {
@@ -91,10 +107,8 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                 requestStoragePermission();
             }).show();
         }
-        if (mediaPlayer != null) {
-            initMediaPlayer();
-        } else {
-            layoutMiniPlayer.setVisibility(View.GONE);
+        if (!miniPlayerThread.isAlive()) {
+            miniPlayerThread.start();
         }
         new Thread(() -> {
             PlayerService.favouriteSongsList.addAll(database.getFavouriteSongs());
@@ -109,7 +123,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                 for (Playlist playlist : database.getPlaylists()) {
                     addNewPlaylist(playlist);
                 }
-            }, 1500);
+            }, 1000);
         }
     }
 
@@ -131,11 +145,15 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void initMediaPlayer() {
-        txtSongNameMiniPlayer.setText(currentSong.getTitle());
-        txtSongArtistMiniPlayer.setText(currentSong.getArtist());
-        layoutMiniPlayer.setVisibility(View.VISIBLE);
-        final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(this::updateMiniPlayerPlayButton, 100);
+        if (mediaPlayer != null) {
+            layoutMiniPlayer.setVisibility(View.VISIBLE);
+            txtSongNameMiniPlayer.setText(currentSong.getTitle());
+            txtSongArtistMiniPlayer.setText(currentSong.getArtist());
+            final Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(this::updateMiniPlayerPlayButton, 100);
+        } else {
+            layoutMiniPlayer.setVisibility(View.GONE);
+        }
     }
 
     private void requestStoragePermission() {
@@ -196,7 +214,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                     break;
 
                 case R.id.btn_create_playlist:
-                    showCreatePlaylistDialog();
+                    DialogHandlers.showCreatePlaylistDialog(this, this, false);
                     break;
 
                 case R.id.btn_all_playlists:
@@ -206,32 +224,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         } else {
             Toast.makeText(this, "Please grant Storage Permission first", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public void showCreatePlaylistDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog_create_playlist);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialog.setCancelable(false);
-
-        EditText inputPlaylistName = dialog.findViewById(R.id.input_playlist_name);
-        ImageView btnClosePlaylistDialog = dialog.findViewById(R.id.btn_close_playlist_dialog);
-        Button btnCreatePlaylist = dialog.findViewById(R.id.btn_create_playlist);
-        btnCreatePlaylist.setOnClickListener(v -> {
-            String name = inputPlaylistName.getText().toString().trim();
-            if (!name.isEmpty()) {
-                dialog.dismiss();
-                Functions.closeKeyboard(this);
-                String time = String.valueOf(System.currentTimeMillis());
-                String id = database.createPlaylist(name, time);
-                addNewPlaylist(new Playlist(id, name, time));
-                Toast.makeText(this, "Playlist Created!", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Invalid Name!", Toast.LENGTH_SHORT).show();
-            }
-        });
-        btnClosePlaylistDialog.setOnClickListener(v -> dialog.dismiss());
-        dialog.show();
     }
 
     private void updateMiniPlayerAction() {

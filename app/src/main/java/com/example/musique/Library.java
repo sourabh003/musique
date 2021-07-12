@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,6 +27,7 @@ import static com.example.musique.service.PlayerService.mediaPlayer;
 
 public class Library extends AppCompatActivity {
 
+    private static final String TAG = "Library";
     ImageView btnBack, btnSearch;
     EditText searchBar;
     TextView titleText;
@@ -33,6 +35,8 @@ public class Library extends AppCompatActivity {
     LinearLayout layoutMiniPlayer;
     TextView txtSongNameMiniPlayer, txtSongArtistMiniPlayer;
     ImageView btnPlayMiniPlayer, btnNext;
+
+    Thread miniPlayerThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,18 @@ public class Library extends AppCompatActivity {
         txtSongArtistMiniPlayer = findViewById(R.id.song_artist_miniplayer);
         btnPlayMiniPlayer = findViewById(R.id.btn_play_miniplayer);
         btnNext = findViewById(R.id.btn_next_miniplayer);
+
+        miniPlayerThread = new Thread(() -> {
+            try {
+                while (true){
+                    runOnUiThread(this::initMediaPlayer);
+                    Thread.sleep(1000);
+                }
+            } catch (InterruptedException e){
+                Log.e(TAG, "onCreate: Mini Player Thread Exception", e);
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override
@@ -65,14 +81,28 @@ public class Library extends AppCompatActivity {
         } else {
             layoutMiniPlayer.setVisibility(View.GONE);
         }
+        if (!miniPlayerThread.isAlive()){
+            miniPlayerThread.start();
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        miniPlayerThread.interrupt();
     }
 
     private void initMediaPlayer() {
-        txtSongNameMiniPlayer.setText(currentSong.getTitle());
-        txtSongArtistMiniPlayer.setText(currentSong.getArtist());
-        layoutMiniPlayer.setVisibility(View.VISIBLE);
-        final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(this::updateMiniPlayerPlayButton, 100);
+        if (mediaPlayer != null){
+            layoutMiniPlayer.setVisibility(View.VISIBLE);
+            txtSongNameMiniPlayer.setText(currentSong.getTitle());
+            txtSongArtistMiniPlayer.setText(currentSong.getArtist());
+            final Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(this::updateMiniPlayerPlayButton, 100);
+        } else {
+            layoutMiniPlayer.setVisibility(View.GONE);
+        }
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")

@@ -32,7 +32,7 @@ public class Database extends SQLiteOpenHelper {
     private static final String PLAYLIST_CREATED = "playlist_created_on";
     public static final String CREATE_PLAYLISTS_TABLE = "CREATE TABLE " + PLAYLISTS_TABLE + " (" + PLAYLIST_ID + " TEXT NOT NULL UNIQUE, " + PLAYLIST_NAME + " TEXT, "+PLAYLIST_CREATED+" TEXT)";
     public static final String GET_PLAYLISTS = "SELECT * FROM " + PLAYLISTS_TABLE;
-    public static final String CREATE_PLAYLISTS_SONGS_TABLE = "CREATE TABLE " + PLAYLISTS_SONGS_TABLE + " (" + PLAYLIST_ID + " TEXT NOT NULL UNIQUE, " + SONG_ID + " TEXT)";
+    public static final String CREATE_PLAYLISTS_SONGS_TABLE = "CREATE TABLE " + PLAYLISTS_SONGS_TABLE + " (" + PLAYLIST_ID + " TEXT , " + SONG_ID + " TEXT)";
     public static final String GET_PLAYLISTS_SONGS = "SELECT * FROM " + PLAYLISTS_SONGS_TABLE;
 
     public Database(Context context) {
