@@ -55,10 +55,10 @@
     </com.google.android.material.appbar.MaterialToolbar>
 
     <LinearLayout
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/loading"
-        android:id="@+id/main_layout"
+        android:layout_above="@id/layout_miniplayer"
         android:layout_below="@id/toolbar"
         android:orientation="vertical">
 
@@ -122,12 +122,12 @@
                     android:layout_alignParentBottom="true"
                     android:backgroundTint="@color/MaterialPurple"
                     android:clickable="true"
+                    android:drawableEnd="@drawable/ic_baseline_play_arrow_24"
+                    android:drawableTint="@color/white"
                     android:focusable="true"
                     android:fontFamily="@font/ubuntu_bold"
                     android:onClick="onClick"
                     android:text="@string/play_all"
-                    android:drawableTint="@color/white"
-                    android:drawableEnd="@drawable/ic_baseline_play_arrow_24"
                     android:textAllCaps="false"
                     android:textColor="@color/white" />
 
@@ -139,6 +139,16 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/DarkGray" />
+
+        <ProgressBar
+            android:id="@+id/loading"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-6dp"
+            android:layout_marginBottom="-6dp"
+            android:indeterminate="true"
+            android:visibility="visible" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/album_track_list_container"
@@ -157,14 +167,7 @@
 
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/loading"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="-5dp"
-        android:layout_alignParentBottom="true"
-        android:indeterminate="true"
-        android:visibility="visible" />
+    <include layout="@layout/layout_miniplayer" />
+
 
 </RelativeLayout>

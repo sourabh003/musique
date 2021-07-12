@@ -13,7 +13,7 @@
     android:onClick="onClick"
     android:orientation="horizontal"
     android:padding="5dp"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <ImageView
         android:layout_width="?attr/actionBarSize"
@@ -61,6 +61,7 @@
         android:layout_width="?attr/actionBarSize"
         android:layout_height="?attr/actionBarSize"
         android:clickable="true"
+        android:onClick="onClick"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
         android:padding="10dp"
@@ -72,6 +73,7 @@
         android:layout_height="?attr/actionBarSize"
         android:clickable="true"
         android:focusable="true"
+        android:onClick="onClick"
         android:foreground="?attr/selectableItemBackground"
         android:padding="10dp"
         android:src="@drawable/ic_baseline_skip_next_24" />

@@ -20,11 +20,11 @@
             android:id="@+id/btn_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:onClick="onClick"
             android:layout_gravity="start"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
+            android:onClick="onClick"
             android:padding="10dp"
             android:src="@drawable/ic_baseline_arrow_back_ios_24"
             app:tint="@color/white" />
@@ -59,15 +59,15 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:padding="10dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:fontFamily="@font/ubuntu_bold"
                     android:gravity="center"
-                    android:layout_marginTop="5dp"
                     android:text="Favourite Songs"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
@@ -75,8 +75,8 @@
                 <TextView
                     android:id="@+id/txt_fav_songs_count"
                     android:layout_width="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:fontFamily="@font/ubuntu_bold"
                     android:gravity="center"
                     android:text="0 Songs"
@@ -88,16 +88,16 @@
             <Button
                 android:id="@+id/btn_play_all"
                 android:layout_width="wrap_content"
-                android:onClick="onClick"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="15dp"
                 android:backgroundTint="@color/YellowGreen"
                 android:clickable="true"
-                android:focusable="true"
                 android:drawableEnd="@drawable/ic_baseline_play_arrow_24"
                 android:drawableTint="@color/black"
+                android:focusable="true"
                 android:fontFamily="@font/ubuntu_bold"
+                android:onClick="onClick"
                 android:text="Play All"
                 android:textAllCaps="false"
                 android:textColor="@color/black" />
@@ -114,14 +114,14 @@
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="-5dp"
             android:layout_marginTop="-6dp"
+            android:layout_marginBottom="-5dp"
             android:indeterminate="true" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/fav_song_list_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:id="@+id/fav_song_list_container"
             android:layout_weight="1">
 
             <androidx.recyclerview.widget.RecyclerView
@@ -135,82 +135,6 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/layout_miniplayer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/gradient4"
-        android:clickable="true"
-        android:elevation="3dp"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
-        android:onClick="onClick"
-        android:orientation="horizontal"
-        android:padding="5dp"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="?attr/actionBarSize"
-            android:src="@drawable/default_album_art_2" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:padding="5dp">
-
-            <TextView
-                android:id="@+id/song_title_miniplayer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ellipsize="marquee"
-                android:fontFamily="@font/ubuntu_bold"
-                android:gravity="center_vertical"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:singleLine="true"
-                android:text="@string/song_title"
-                android:textColor="@color/white" />
-
-            <TextView
-                android:id="@+id/song_artist_miniplayer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/ubuntu_bold"
-                android:gravity="center_vertical"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:text="@string/artist_title"
-                android:textColor="@color/DarkGray"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/btn_play_miniplayer"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="?attr/actionBarSize"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:padding="10dp"
-            android:src="@drawable/ic_baseline_play_arrow_24" />
-
-        <ImageView
-            android:id="@+id/btn_next_miniplayer"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="?attr/actionBarSize"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:padding="10dp"
-            android:src="@drawable/ic_baseline_skip_next_24" />
-
-    </LinearLayout>
+    <include layout="@layout/layout_miniplayer" />
 
 </RelativeLayout>

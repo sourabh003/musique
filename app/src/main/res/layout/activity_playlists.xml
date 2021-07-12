@@ -54,33 +54,42 @@
 
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/playlists_view_container"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/loading"
-        android:layout_below="@id/toolbar">
+        android:layout_below="@id/toolbar"
+        android:id="@+id/layout_parent"
+        android:orientation="vertical">
 
-        <GridView
-            android:id="@+id/playlists_view"
+        <ProgressBar
+            android:id="@+id/loading"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:numColumns="3"
-            android:horizontalSpacing="10dp"
-            android:padding="10dp"
-            android:verticalSpacing="10dp"
-            tools:listitem="@layout/list_item_playlist" />
+            android:layout_marginTop="-6dp"
+            android:layout_marginBottom="-6dp"
+            android:indeterminate="true" />
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/playlists_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <ProgressBar
-        android:id="@+id/loading"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="-6dp"
-        android:indeterminate="true" />
+            <GridView
+                android:id="@+id/playlists_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:numColumns="3"
+                android:horizontalSpacing="10dp"
+                android:padding="10dp"
+                android:verticalSpacing="10dp"
+                tools:listitem="@layout/list_item_playlist" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
+
+    <include layout="@layout/layout_miniplayer"/>
 
 </RelativeLayout>

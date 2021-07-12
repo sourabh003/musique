@@ -7,10 +7,10 @@
     tools:context=".Library">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:id="@+id/app_bar"
         android:background="@color/colorLibrary"
         android:theme="@style/Theme.Musique.AppBarOverlay">
 
@@ -24,9 +24,9 @@
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="match_parent"
                 android:clickable="true"
-                android:onClick="onClick"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
+                android:onClick="onClick"
                 android:padding="15dp"
                 android:src="@drawable/ic_baseline_arrow_back_ios_24" />
 
@@ -64,8 +64,8 @@
                 android:layout_height="match_parent"
                 android:clickable="true"
                 android:focusable="true"
-                android:onClick="onClick"
                 android:foreground="?attr/selectableItemBackground"
+                android:onClick="onClick"
                 android:padding="15dp"
                 android:src="@drawable/ic_baseline_search_24" />
 
@@ -83,88 +83,10 @@
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/app_bar"
         android:layout_above="@id/layout_miniplayer"
+        android:layout_below="@id/app_bar"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <LinearLayout
-        android:id="@+id/layout_miniplayer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:onClick="onClick"
-        android:foreground="?attr/selectableItemBackground"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone"
-        android:background="@drawable/gradient4"
-        android:padding="5dp"
-        android:elevation="3dp"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="?attr/actionBarSize"
-            android:src="@drawable/default_album_art_2" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="5dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/song_title_miniplayer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:singleLine="true"
-                android:ellipsize="marquee"
-                android:fontFamily="@font/ubuntu_bold"
-                android:gravity="center_vertical"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:text="@string/song_title"
-                android:textColor="@color/white" />
-
-            <TextView
-                android:id="@+id/song_artist_miniplayer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/ubuntu_bold"
-                android:gravity="center_vertical"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:textSize="12sp"
-                android:text="@string/artist_title"
-                android:textColor="@color/DarkGray" />
-
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/btn_play_miniplayer"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="?attr/actionBarSize"
-            android:clickable="true"
-            android:onClick="onClick"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:padding="10dp"
-            android:src="@drawable/ic_baseline_play_arrow_24" />
-
-        <ImageView
-            android:id="@+id/btn_next_miniplayer"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="?attr/actionBarSize"
-            android:clickable="true"
-            android:onClick="onClick"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:padding="10dp"
-            android:src="@drawable/ic_baseline_skip_next_24" />
-
-    </LinearLayout>
+    <include layout="@layout/layout_miniplayer" />
 
 </RelativeLayout>

@@ -38,14 +38,18 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     String TAG = "Home";
     LinearLayout layoutLibraries, layoutFolders, layoutFavourites;
     LinearLayout layoutParent;
+
     LinearLayout layoutMiniPlayer;
     TextView txtSongNameMiniPlayer, txtSongArtistMiniPlayer;
     ImageView btnPlayMiniPlayer, btnNextMiniPlayer;
-    Database database;
+    Thread miniPlayerThread;
 
+    Database database;
     ImageView btnCreatePlaylist;
     LinearLayout playListView;
-    Thread miniPlayerThread;
+
+    boolean backPressed = false;
+    final Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,16 +64,14 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         layoutFolders = findViewById(R.id.layout_folders);
         layoutFolders.setOnClickListener(this);
         layoutParent = findViewById(R.id.layout_parent);
+        btnCreatePlaylist = findViewById(R.id.btn_create_playlist);
+        playListView = findViewById(R.id.playlists_view);
+
         layoutMiniPlayer = findViewById(R.id.layout_miniplayer);
         txtSongNameMiniPlayer = findViewById(R.id.song_title_miniplayer);
         txtSongArtistMiniPlayer = findViewById(R.id.song_artist_miniplayer);
         btnPlayMiniPlayer = findViewById(R.id.btn_play_miniplayer);
-        btnPlayMiniPlayer.setOnClickListener(this);
         btnNextMiniPlayer = findViewById(R.id.btn_next_miniplayer);
-        btnNextMiniPlayer.setOnClickListener(this);
-        btnCreatePlaylist = findViewById(R.id.btn_create_playlist);
-
-        playListView = findViewById(R.id.playlists_view);
 
         miniPlayerThread = new Thread(() -> {
             try {
@@ -118,7 +120,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
     private void loadPlaylists() {
         if (checkStoragePermission() && playListView.getChildCount() == 0) {
-            final Handler handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(() -> {
                 for (Playlist playlist : database.getPlaylists()) {
                     addNewPlaylist(playlist);
@@ -233,5 +234,18 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
             mediaPlayer.start();
         }
         updateMiniPlayerPlayButton();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (backPressed) {
+            super.onBackPressed();
+        } else {
+            Toast.makeText(this, "Press BACK again to exit", Toast.LENGTH_SHORT).show();
+            backPressed = true;
+            handler.postDelayed(() -> {
+                backPressed = false;
+            }, 2000);
+        }
     }
 }

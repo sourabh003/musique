@@ -42,29 +42,38 @@
 
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/folder_list_container"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/loading"
         android:layout_below="@id/toolbar"
-        android:padding="5dp">
+        android:layout_above="@id/layout_miniplayer"
+        android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/folder_list_view"
+        <ProgressBar
+            android:id="@+id/loading"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:listitem="@layout/list_item_folders"/>
+            android:layout_marginBottom="-5dp"
+            android:layout_marginTop="-6dp"
+            android:indeterminate="true" />
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/folder_list_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
 
-    <ProgressBar
-        android:id="@+id/loading"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="-5dp"
-        android:indeterminate="true" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/folder_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/list_item_folders"/>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
+
+    <include layout="@layout/layout_miniplayer"/>
 
 </RelativeLayout>
