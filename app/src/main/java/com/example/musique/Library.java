@@ -17,13 +17,13 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.musique.service.PlayerService;
+import com.example.musique.services.PlayerService;
 import com.example.musique.ui.main.SectionsPagerAdapter;
 import com.example.musique.utility.Functions;
 import com.google.android.material.tabs.TabLayout;
 
-import static com.example.musique.service.PlayerService.currentSong;
-import static com.example.musique.service.PlayerService.mediaPlayer;
+import static com.example.musique.services.PlayerService.currentSong;
+import static com.example.musique.services.PlayerService.mediaPlayer;
 
 public class Library extends AppCompatActivity {
 

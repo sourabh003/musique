@@ -2,10 +2,13 @@ package com.example.musique;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.musique.database.Database;
 import com.example.musique.helpers.Playlist;
-import com.example.musique.service.PlayerService;
+import com.example.musique.services.PlayerService;
 import com.example.musique.utility.Constants;
 import com.example.musique.utility.DialogHandlers;
 import com.example.musique.utility.Functions;
@@ -30,10 +33,10 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
-import static com.example.musique.service.PlayerService.currentSong;
-import static com.example.musique.service.PlayerService.mediaPlayer;
+import static com.example.musique.services.PlayerService.currentSong;
+import static com.example.musique.services.PlayerService.mediaPlayer;
 
-public class Home extends AppCompatActivity implements View.OnClickListener {
+public class Home extends AppCompatActivity implements View.OnClickListener, ServiceConnection{
 
     String TAG = "Home";
     LinearLayout layoutLibraries, layoutFolders, layoutFavourites;
@@ -50,6 +53,8 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
     boolean backPressed = false;
     final Handler handler = new Handler(Looper.getMainLooper());
+
+    PlayerService musicService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +121,31 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
             PlayerService.favouriteSongsList.addAll(database.getFavouriteSongs());
         }).start();
         loadPlaylists();
+
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        PlayerService.CustomBinder binder = (PlayerService.CustomBinder) service;
+        musicService = binder.getService();
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        musicService = null;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = new Intent(this, PlayerService.class);
+        bindService(intent, this, BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unbindService(this);
     }
 
     private void loadPlaylists() {

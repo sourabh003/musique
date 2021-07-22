@@ -2,8 +2,6 @@ package com.example.musique;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -22,15 +20,14 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.musique.adapters.TrackListAdapter;
 import com.example.musique.helpers.Song;
-import com.example.musique.service.PlayerService;
+import com.example.musique.services.PlayerService;
 import com.example.musique.utility.Functions;
 import com.example.musique.utility.SongsHandler;
 
 import java.util.ArrayList;
 
-import static com.example.musique.service.PlayerService.currentSong;
-import static com.example.musique.service.PlayerService.isLibraryRepeating;
-import static com.example.musique.service.PlayerService.mediaPlayer;
+import static com.example.musique.services.PlayerService.currentSong;
+import static com.example.musique.services.PlayerService.mediaPlayer;
 
 public class Favorites extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 

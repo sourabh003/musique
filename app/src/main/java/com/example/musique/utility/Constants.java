@@ -15,4 +15,8 @@ public class Constants {
     public static final String FOLDER_ID = "folder_id";
     public static final String FOLDER = "folder";
     public static final String PLAYLIST_OBJECT = "PASSING_PLAYLIST_OBJECT";
+    public static final String NOTIFICATION_ACTION = "NOTIFICATION_ACTION";
+    public static final String BROADCAST_ACTION = "BROADCAST_ACTION";
+    public static final String PLAY = "PLAY";
+    public static final String PAUSE = "PAUSE";
 }

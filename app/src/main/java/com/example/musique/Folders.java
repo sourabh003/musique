@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,14 +18,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.musique.adapters.FolderListAdapter;
-import com.example.musique.service.PlayerService;
+import com.example.musique.services.PlayerService;
 import com.example.musique.utility.Functions;
 import com.example.musique.utility.SongsHandler;
 
 import java.util.ArrayList;
 
-import static com.example.musique.service.PlayerService.currentSong;
-import static com.example.musique.service.PlayerService.mediaPlayer;
+import static com.example.musique.services.PlayerService.currentSong;
+import static com.example.musique.services.PlayerService.mediaPlayer;
 
 public class Folders extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 

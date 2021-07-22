@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.musique.Player;
 import com.example.musique.R;
 import com.example.musique.helpers.Song;
-import com.example.musique.service.PlayerService;
+import com.example.musique.services.PlayerService;
 
 import java.util.ArrayList;
 

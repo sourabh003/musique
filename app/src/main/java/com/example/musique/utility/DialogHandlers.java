@@ -20,7 +20,7 @@ import com.example.musique.helpers.Playlist;
 
 import java.util.ArrayList;
 
-import static com.example.musique.service.PlayerService.currentSong;
+import static com.example.musique.services.PlayerService.currentSong;
 
 public class DialogHandlers {
 

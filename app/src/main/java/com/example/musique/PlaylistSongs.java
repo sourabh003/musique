@@ -22,14 +22,14 @@ import com.example.musique.adapters.TrackListAdapter;
 import com.example.musique.database.Database;
 import com.example.musique.helpers.Playlist;
 import com.example.musique.helpers.Song;
-import com.example.musique.service.PlayerService;
+import com.example.musique.services.PlayerService;
 import com.example.musique.utility.Constants;
 import com.example.musique.utility.Functions;
 
 import java.util.ArrayList;
 
-import static com.example.musique.service.PlayerService.currentSong;
-import static com.example.musique.service.PlayerService.mediaPlayer;
+import static com.example.musique.services.PlayerService.currentSong;
+import static com.example.musique.services.PlayerService.mediaPlayer;
 
 public class PlaylistSongs extends AppCompatActivity {
 

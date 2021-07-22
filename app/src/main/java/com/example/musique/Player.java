@@ -1,20 +1,16 @@
 package com.example.musique;
 
-import android.app.Dialog;
-import android.graphics.drawable.ColorDrawable;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
-import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -23,29 +19,26 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.musique.database.Database;
-import com.example.musique.helpers.Playlist;
-import com.example.musique.service.PlayerService;
+import com.example.musique.services.PlayerService;
 import com.example.musique.utility.Constants;
 import com.example.musique.utility.DialogHandlers;
 import com.example.musique.utility.Functions;
-import com.example.musique.utility.SongsHandler;
 
-import java.util.ArrayList;
-
-import static com.example.musique.service.PlayerService.currentSong;
-import static com.example.musique.service.PlayerService.isLibraryRepeating;
-import static com.example.musique.service.PlayerService.mediaPlayer;
+import static com.example.musique.services.PlayerService.currentSong;
+import static com.example.musique.services.PlayerService.isLibraryRepeating;
+import static com.example.musique.services.PlayerService.mediaPlayer;
 
 public class Player extends AppCompatActivity implements View.OnClickListener {
 
     String TAG = "Player";
 
     TextView txtSongName, txtArtistName;
-    ImageView imgAlbumArt, btnBack, btnPlay, btnNext, btnPrevious, btnRepeat, btnAddToPlaylist, btnLike;
+    ImageView imgAlbumArt, btnBack, btnPlay, btnNext, btnPrevious, btnRepeat, btnLike;
     TextView songStartTimeStamp, songEndTimeStamp;
     SeekBar playerSeekBar;
     Database database;
     Thread seekBarThread;
+    String songID = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,10 +88,11 @@ public class Player extends AppCompatActivity implements View.OnClickListener {
                 while (start < end) {
                     playerSeekBar.setProgress(mediaPlayer.getCurrentPosition());
                     start = mediaPlayer.getCurrentPosition();
-                    Thread.sleep(500);
-                    if (!mediaPlayer.isPlaying()){
-                        runOnUiThread(this::updatePlayButton);
+                    Thread.sleep(1000);
+                    if (!songID.equals(currentSong.getId())) {
+                        runOnUiThread(this::updateUI);
                     }
+                    runOnUiThread(this::updatePlayButton);
                 }
             } catch (InterruptedException e) {
                 Log.e(TAG, "onCreate: SeekBar Thread: ", e);
@@ -149,6 +143,7 @@ public class Player extends AppCompatActivity implements View.OnClickListener {
         updatePlayButton();
         updateLoopButton();
         updateLikeButton();
+        songID = currentSong.getId();
     }
 
     private void updateRepeatAction() {
