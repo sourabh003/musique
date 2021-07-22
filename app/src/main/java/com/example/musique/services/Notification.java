@@ -9,6 +9,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 
 import androidx.core.app.NotificationCompat;
 
+import com.example.musique.Home;
 import com.example.musique.Player;
 import com.example.musique.R;
 import com.example.musique.utility.Constants;
@@ -24,11 +25,12 @@ import static com.example.musique.services.PlayerService.mediaPlayer;
 public class Notification {
 
     public void showNotification(Context context) {
-        getNotificationManager(context).notify(0, getNotificationBuilder(context).build());
+        NotificationManager manager = getNotificationManager(context);
+        manager.notify(0, getNotificationBuilder(context).build());
     }
 
     public NotificationCompat.Builder getNotificationBuilder(Context context) {
-        Intent intent = new Intent(context, Player.class);
+        Intent intent = new Intent(context, Home.class);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
         Intent playPauseIntent = new Intent(context, NotificationReceiver.class).setAction(ACTION_PLAY);
@@ -60,7 +62,8 @@ public class Notification {
                 .addAction(R.drawable.ic_baseline_skip_next_24, "Next", nextPendingIntent)
                 .setStyle(new androidx.media.app.NotificationCompat.MediaStyle().setMediaSession(new MediaSessionCompat(context, "Audio").getSessionToken()))
                 .setPriority(NotificationCompat.PRIORITY_MIN)
-                .setOngoing(true);
+                .setOngoing(true)
+                .setContentIntent(contentIntent);
     }
 
     public NotificationManager getNotificationManager(Context context) {
