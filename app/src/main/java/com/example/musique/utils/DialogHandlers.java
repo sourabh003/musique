@@ -1,10 +1,11 @@
-package com.example.musique.utility;
+package com.example.musique.utils;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -13,12 +14,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.musique.Playlists;
+import com.example.musique.PlaylistSongs;
 import com.example.musique.R;
 import com.example.musique.database.Database;
 import com.example.musique.helpers.Playlist;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.example.musique.services.PlayerService.currentSong;
 
@@ -41,7 +43,7 @@ public class DialogHandlers {
             for (Playlist playlist : database.getPlaylists()) {
                 View view = activity.getLayoutInflater().inflate(R.layout.list_item_playlist_list, null);
                 CheckBox checkBox = view.findViewById(R.id.playlist_checkbox);
-                checkBox.setText(playlist.getName());
+                checkBox.setText(Functions.capitalize(playlist.getName()));
                 checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     if (isChecked) {
                         addToPlaylistList.add(playlist.getId());
@@ -81,21 +83,20 @@ public class DialogHandlers {
         dialog.setCancelable(false);
 
         EditText inputPlaylistName = dialog.findViewById(R.id.input_playlist_name);
-        ImageView btnClosePlaylistDialog = dialog.findViewById(R.id.btn_close_playlist_dialog);
+        Button btnClosePlaylistDialog = dialog.findViewById(R.id.btn_close_playlist_dialog);
         Button btnCreatePlaylist = dialog.findViewById(R.id.btn_create_playlist);
         btnCreatePlaylist.setOnClickListener(v -> {
             String name = inputPlaylistName.getText().toString().trim();
             if (!name.isEmpty()) {
                 dialog.dismiss();
                 Functions.closeKeyboard(activity);
-                new Thread(() -> {
-                    String time = String.valueOf(System.currentTimeMillis());
-                    database.createPlaylist(name, time);
-                }).start();
-                if (fromPlayer){
+                String time = String.valueOf(System.currentTimeMillis());
+                String id = database.createPlaylist(name, time);
+                Playlist playlist = new Playlist(id, name, time);
+                if (fromPlayer) {
                     showAddToPlaylistDialog(context, activity);
                 } else {
-                    context.startActivity(new Intent(context, Playlists.class));
+                    context.startActivity(new Intent(context, PlaylistSongs.class).putExtra(Constants.PLAYLIST_OBJECT, playlist));
                 }
                 Toast.makeText(context, name + " Playlist Created!", Toast.LENGTH_SHORT).show();
             } else {
@@ -104,5 +105,28 @@ public class DialogHandlers {
         });
         btnClosePlaylistDialog.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
+    }
+
+    public static boolean openPlaylistDeleteDialog(Context context, Playlist playlist) {
+        Database database = new Database(context);
+        AtomicBoolean deleted = new AtomicBoolean(false);
+        Dialog dialog = new Dialog(context);
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_delete_playlist, null);
+        dialog.setContentView(view);
+        Button btnCancel = dialog.findViewById(R.id.btn_cancel_delete);
+        Button btnDelete = dialog.findViewById(R.id.btn_confirm_delete);
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+        btnDelete.setOnClickListener(v -> {
+            dialog.dismiss();
+            Toast.makeText(context, "Playlist Deleted", Toast.LENGTH_SHORT).show();
+            new Thread(() -> {
+                database.deletePlaylist(playlist);
+            }).start();
+            deleted.set(true);
+        });
+        dialog.show();
+        return deleted.get();
     }
 }

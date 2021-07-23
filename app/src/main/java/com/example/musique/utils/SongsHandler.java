@@ -1,11 +1,10 @@
-package com.example.musique.utility;
+package com.example.musique.utils;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import com.example.musique.FolderSongs;
 import com.example.musique.database.Database;
 import com.example.musique.helpers.Album;
 import com.example.musique.helpers.Song;
@@ -15,7 +14,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class SongsHandler {

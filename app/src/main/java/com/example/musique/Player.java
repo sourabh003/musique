@@ -1,11 +1,7 @@
 package com.example.musique;
 
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -20,13 +16,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.musique.database.Database;
 import com.example.musique.services.PlayerService;
-import com.example.musique.utility.Constants;
-import com.example.musique.utility.DialogHandlers;
-import com.example.musique.utility.Functions;
+import com.example.musique.utils.CacheHandlers;
+import com.example.musique.utils.Constants;
+import com.example.musique.utils.DialogHandlers;
+import com.example.musique.utils.Functions;
 
 import static com.example.musique.services.PlayerService.currentSong;
 import static com.example.musique.services.PlayerService.isLibraryRepeating;
 import static com.example.musique.services.PlayerService.mediaPlayer;
+import static com.example.musique.services.PlayerService.songIndex;
 
 public class Player extends AppCompatActivity implements View.OnClickListener {
 
@@ -117,9 +115,6 @@ public class Player extends AppCompatActivity implements View.OnClickListener {
 
     private void loadMediaPlayer() {
         PlayerService.loadMediaPlayer(this);
-        final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(this::updateUI, 100);
-        Functions.updateLatestSong(this, currentSong);
         playerSeekBar.setMax(mediaPlayer.getDuration());
         songEndTimeStamp.setText(Functions.getModifiedDuration(mediaPlayer.getDuration()));
     }
@@ -176,11 +171,10 @@ public class Player extends AppCompatActivity implements View.OnClickListener {
     private void changeSong(String which) {
         playerSeekBar.setProgress(0);
         if (which.equals(Constants.NEXT_SONG)) {
-            PlayerService.nextSong();
+            PlayerService.nextSong(this);
         } else {
-            PlayerService.previousSong();
+            PlayerService.previousSong(this);
         }
-        loadMediaPlayer();
         updateUI();
     }
 

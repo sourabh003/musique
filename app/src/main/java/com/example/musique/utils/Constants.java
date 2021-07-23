@@ -1,4 +1,4 @@
-package com.example.musique.utility;
+package com.example.musique.utils;
 
 public class Constants {
     public static final String CURRENT_PLAYING_SONG = "CURRENT_PLAYING_SONG";

@@ -19,7 +19,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.musique.services.PlayerService;
 import com.example.musique.ui.main.SectionsPagerAdapter;
-import com.example.musique.utility.Functions;
+import com.example.musique.utils.Functions;
 import com.google.android.material.tabs.TabLayout;
 
 import static com.example.musique.services.PlayerService.currentSong;
@@ -168,8 +168,7 @@ public class Library extends AppCompatActivity {
                 break;
 
             case R.id.btn_next_miniplayer:
-                PlayerService.nextSong();
-                PlayerService.loadMediaPlayer(this);
+                PlayerService.nextSong(this);
                 initMediaPlayer();
                 break;
 

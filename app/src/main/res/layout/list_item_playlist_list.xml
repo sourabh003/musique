@@ -11,7 +11,8 @@
         android:elevation="7dp"
         android:background="@color/WhiteSmoke"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/ubuntu_bold"
+        android:fontFamily="@font/sf"
+        android:buttonTint="@color/colorPrimaryDark"
         android:text="@string/playlist_name"
         android:padding="10dp"
         android:layout_gravity="center" />

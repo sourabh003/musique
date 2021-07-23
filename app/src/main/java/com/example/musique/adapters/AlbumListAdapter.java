@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 import com.example.musique.AlbumSongs;
 import com.example.musique.R;
 import com.example.musique.helpers.Album;
-import com.example.musique.utility.Constants;
+import com.example.musique.utils.Constants;
 
 import java.util.ArrayList;
 

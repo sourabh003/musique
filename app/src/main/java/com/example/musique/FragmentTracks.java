@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,8 +18,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.musique.adapters.TrackListAdapter;
 import com.example.musique.helpers.Song;
-import com.example.musique.utility.Functions;
-import com.example.musique.utility.SongsHandler;
+import com.example.musique.utils.Functions;
+import com.example.musique.utils.SongsHandler;
 
 import java.util.ArrayList;
 

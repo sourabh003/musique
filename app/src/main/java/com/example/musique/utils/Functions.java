@@ -1,4 +1,4 @@
-package com.example.musique.utility;
+package com.example.musique.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -60,27 +60,6 @@ public class Functions {
         fos.close();
     }
 
-    public static void updateLatestSong(Context context, Song song) {
-        SharedPreferences.Editor editor = context.getSharedPreferences(Constants.CURRENT_PLAYING_SONG, Context.MODE_PRIVATE).edit();
-        editor.putString(Constants.SONG_TITLE, song.getTitle());
-        editor.putString(Constants.SONG_ID, song.getId());
-        editor.putString(Constants.SONG_ARTIST, song.getArtist());
-        editor.putString(Constants.SONG_DATA, song.getData());
-        editor.putString(Constants.SONG_ALBUM, song.getAlbum());
-        editor.apply();
-    }
-
-    public static Song getLatestSong(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.CURRENT_PLAYING_SONG, Context.MODE_PRIVATE);
-        return new Song(
-                sharedPreferences.getString(Constants.SONG_ID, "0"),
-                sharedPreferences.getString(Constants.SONG_TITLE, null),
-                sharedPreferences.getString(Constants.SONG_ARTIST, null),
-                sharedPreferences.getString(Constants.SONG_ALBUM, null),
-                sharedPreferences.getString(Constants.SONG_DATA, null)
-        );
-    }
-
     @SuppressLint("DefaultLocale")
     public static String getModifiedDuration(int time) {
         String duration;
@@ -111,5 +90,9 @@ public class Functions {
     public static int getValueInDP(int sizeInDP, Context context) {
         return (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, sizeInDP, context.getResources().getDisplayMetrics());
+    }
+
+    public static String capitalize(String string){
+        return string.substring(0, 1).toUpperCase() + string.substring(1);
     }
 }

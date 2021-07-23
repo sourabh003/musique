@@ -17,8 +17,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.musique.adapters.AlbumListAdapter;
 import com.example.musique.helpers.Album;
-import com.example.musique.utility.Functions;
-import com.example.musique.utility.SongsHandler;
+import com.example.musique.utils.Functions;
+import com.example.musique.utils.SongsHandler;
 
 import java.util.ArrayList;
 

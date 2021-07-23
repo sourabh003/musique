@@ -10,9 +10,8 @@ import android.support.v4.media.session.MediaSessionCompat;
 import androidx.core.app.NotificationCompat;
 
 import com.example.musique.Home;
-import com.example.musique.Player;
 import com.example.musique.R;
-import com.example.musique.utility.Constants;
+import com.example.musique.utils.Constants;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.example.musique.services.ApplicationClass.ACTION_NEXT;

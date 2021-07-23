@@ -24,4 +24,5 @@
     <string name="playlists">Playlists</string>
     <string name="playlist_name">Playlist Name</string>
     <string name="created_on">Created on :</string>
+    <string name="playlist_delete_confirmation">Sure you want to delete this Playlist?</string>
 </resources>

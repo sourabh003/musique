@@ -12,8 +12,10 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 
 import com.example.musique.helpers.Song;
-import com.example.musique.utility.Constants;
-import com.example.musique.utility.Functions;
+import com.example.musique.utils.CacheHandlers;
+import com.example.musique.utils.Constants;
+import com.example.musique.utils.Functions;
+import com.example.musique.utils.SongsHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +33,6 @@ public class PlayerService extends Service {
     public static ArrayList<Song> tracksList = new ArrayList<>();
     public static int songIndex = 0;
     public static List<String> favouriteSongsList = new ArrayList<>();
-    public String songID = "0";
     public static Notification notification = new Notification();
 
     public static BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -51,43 +52,42 @@ public class PlayerService extends Service {
                     }
                     break;
                 case ACTION_NEXT:
-                    nextSong();
-                    loadMediaPlayer(context);
+                    nextSong(context);
                     break;
                 case ACTION_PREVIOUS:
-                    previousSong();
-                    loadMediaPlayer(context);
+                    previousSong(context);
                     break;
             }
         }
     };
 
-    public static void nextSong() {
+    public static void nextSong(Context context) {
         if (songIndex == tracksList.size() - 1) {
             songIndex = 0;
         } else {
             songIndex++;
         }
         currentSong = tracksList.get(songIndex);
+        loadMediaPlayer(context);
     }
 
-    public static void previousSong() {
+    public static void previousSong(Context context) {
         if (songIndex == 0) {
             songIndex = tracksList.size() - 1;
         } else {
             songIndex--;
         }
         currentSong = tracksList.get(songIndex);
+        loadMediaPlayer(context);
     }
 
     public static void loadMediaPlayer(Context ctx) {
-        final Context context = ctx;
         if (currentSong == null) {
-            currentSong = Functions.getLatestSong(context);
+            currentSong = CacheHandlers.getLatestSong(ctx);
         }
-        if (Functions.getLatestSong(context).getId().equals(currentSong.getId())) {
+        if (CacheHandlers.getLatestSong(ctx).getId().equals(currentSong.getId())) {
             if (mediaPlayer == null) {
-                initMediaPlayer(context, true);
+                initMediaPlayer(ctx, true);
             } else {
                 if (!mediaPlayer.isPlaying()) {
                     mediaPlayer.start();
@@ -99,17 +99,17 @@ public class PlayerService extends Service {
                 mediaPlayer.reset();
                 mediaPlayer.release();
             }
-            initMediaPlayer(context, true);
+            initMediaPlayer(ctx, true);
 
         }
-        Functions.updateLatestSong(context, currentSong);
+        CacheHandlers.updateLatestSong(ctx, currentSong, songIndex);
     }
 
     public static void initMediaPlayer(Context context, boolean withStart) {
         mediaPlayer = MediaPlayer.create(context, Uri.parse(currentSong.getData()));
         mediaPlayer.setOnCompletionListener(mp -> {
             if (isLibraryRepeating) {
-                nextSong();
+                nextSong(context);
                 loadMediaPlayer(context);
             } else {
                 if (!mediaPlayer.isLooping()) {
@@ -119,12 +119,8 @@ public class PlayerService extends Service {
             }
         });
         if (withStart) {
-            mediaPlayer.setOnPreparedListener(mp -> {
-                mediaPlayer.start();
-//                notification.showNotification(context);
-            });
+            mediaPlayer.setOnPreparedListener(mp -> mediaPlayer.start());
         }
-//        notification.showNotification(context);
     }
 
     public static void playAllSongs(Context context, ArrayList<Song> list) {
@@ -144,8 +140,9 @@ public class PlayerService extends Service {
         new Thread(() -> {
             while (true) {
                 try {
-//                   startForeground(0, notification.getNotificationBuilder(getApplicationContext()).build());
-                    notification.showNotification(getApplicationContext());
+                    if (currentSong != null){
+                        notification.showNotification(getApplicationContext());
+                    }
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -169,11 +166,15 @@ public class PlayerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (currentSong == null) {
-            if (!Functions.getLatestSong(getApplicationContext()).getId().equals("0")) {
-                currentSong = Functions.getLatestSong(getApplicationContext());
+            if (!CacheHandlers.getLatestSong(getApplicationContext()).getId().equals("0")) {
+                currentSong = CacheHandlers.getLatestSong(getApplicationContext());
                 initMediaPlayer(getApplicationContext(), false);
             }
         }
+        if (tracksList.isEmpty()){
+            new Thread(() -> tracksList.addAll(SongsHandler.getSongs(getApplicationContext()))).start();
+        }
+        songIndex = CacheHandlers.getLatestSongIndex(this);
         return START_STICKY;
     }
 

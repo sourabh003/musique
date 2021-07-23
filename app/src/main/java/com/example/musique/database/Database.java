@@ -9,10 +9,9 @@ import android.util.Log;
 
 import com.example.musique.helpers.Playlist;
 import com.example.musique.helpers.Song;
-import com.example.musique.utility.Functions;
-import com.example.musique.utility.SongsHandler;
+import com.example.musique.utils.Functions;
+import com.example.musique.utils.SongsHandler;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,6 +90,11 @@ public class Database extends SQLiteOpenHelper {
         } else {
             return null;
         }
+    }
+
+    public void deletePlaylist(Playlist playlist) {
+        getDatabase().delete(PLAYLISTS_TABLE, PLAYLIST_ID + "=?", new String[]{playlist.getId()});
+        getDatabase().delete(PLAYLISTS_SONGS_TABLE, PLAYLIST_ID + "=?", new String[]{playlist.getId()});
     }
 
     public ArrayList<Playlist> getPlaylists() {

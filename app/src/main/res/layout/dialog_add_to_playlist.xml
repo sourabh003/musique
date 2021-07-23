@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
     android:background="@color/white"
     android:elevation="8dp"
     android:orientation="vertical">
@@ -10,14 +9,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorPrimaryDark"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:fontFamily="@font/ubuntu_bold"
+            android:fontFamily="@font/sf"
             android:gravity="start"
             android:padding="15dp"
             android:text="Add to Playlist"
@@ -40,14 +39,14 @@
         android:background="@color/Gray" />
 
     <TextView
+        android:id="@+id/txt_no_playlist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_no_playlist"
+        android:layout_gravity="center_vertical"
         android:gravity="center"
         android:padding="10dp"
-        android:visibility="gone"
         android:text="No Playlists Found!"
-        android:layout_gravity="center_vertical"/>
+        android:visibility="gone" />
 
     <ScrollView
         android:id="@+id/playlist_list_container"
@@ -58,36 +57,42 @@
             android:id="@+id/playlist_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
-        </LinearLayout>
+            android:orientation="vertical" />
 
     </ScrollView>
 
-    <Button
-        android:id="@+id/btn_add"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:fontFamily="@font/ubuntu_bold"
-        android:text="Add"
-        android:textAllCaps="false"
-        android:textColor="@color/white" />
+        android:orientation="horizontal"
+        android:padding="5dp">
 
-    <Button
-        android:id="@+id/btn_create_playlist"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:backgroundTint="@color/colorPrimaryDark"
-        android:fontFamily="@font/ubuntu_bold"
-        android:text="Create New Playlist"
-        android:textAllCaps="false"
-        android:textColor="@color/white" />
+        <Button
+            android:id="@+id/btn_create_playlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/sf"
+            android:text="New Playlist"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:fontFamily="@font/sf"
+            android:text="Add"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
 
 </LinearLayout>

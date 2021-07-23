@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -21,7 +20,8 @@ import com.example.musique.adapters.PlaylistsAdapter;
 import com.example.musique.database.Database;
 import com.example.musique.helpers.Playlist;
 import com.example.musique.services.PlayerService;
-import com.example.musique.utility.Functions;
+import com.example.musique.utils.DialogHandlers;
+import com.example.musique.utils.Functions;
 
 import java.util.ArrayList;
 
@@ -87,6 +87,10 @@ public class Playlists extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
                 Functions.showLoading(false, loading);
             }, 1500);
+        } else {
+            if (playlists.size() != database.getPlaylists().size()) {
+                refreshList();
+            }
         }
         if (!miniPlayerThread.isAlive()) {
             miniPlayerThread.start();
@@ -94,6 +98,7 @@ public class Playlists extends AppCompatActivity {
     }
 
     public void refreshList() {
+        playlistsViewContainer.setRefreshing(true);
         playlists.clear();
         playlists.addAll(database.getPlaylists());
         adapter.notifyDataSetChanged();
@@ -106,8 +111,8 @@ public class Playlists extends AppCompatActivity {
                 onBackPressed();
                 break;
 
-            case R.id.btn_option:
-                Toast.makeText(this, "Options", Toast.LENGTH_SHORT).show();
+            case R.id.btn_create_playlist:
+                DialogHandlers.showCreatePlaylistDialog(this, this, false);
                 break;
 
             case R.id.btn_play_miniplayer:
@@ -119,8 +124,7 @@ public class Playlists extends AppCompatActivity {
                 break;
 
             case R.id.btn_next_miniplayer:
-                PlayerService.nextSong();
-                PlayerService.loadMediaPlayer(this);
+                PlayerService.nextSong(this);
                 initMediaPlayer();
                 break;
         }

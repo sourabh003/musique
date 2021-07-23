@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:fontFamily="@font/ubuntu_bold"
+            android:fontFamily="@font/sf"
             android:gravity="center"
             android:padding="5dp"
             android:text="@string/now_playing"
@@ -89,6 +89,7 @@
                     android:padding="10dp"
                     android:singleLine="true"
                     android:text="Song Title"
+                    android:fontFamily="@font/sf"
                     android:textColor="@color/white"
                     android:textSize="15sp" />
 
@@ -97,6 +98,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="10dp"
+                    android:fontFamily="@font/sf"
                     android:text="Song Title"
                     android:textColor="@color/DarkGray"
                     android:textSize="13sp" />
@@ -222,6 +224,7 @@
                     android:background="@drawable/background_timestamps"
                     android:padding="5dp"
                     android:paddingStart="10dp"
+                    android:fontFamily="@font/sf"
                     android:paddingEnd="10dp"
                     android:text="00:00"
                     android:textColor="@color/white" />
@@ -235,6 +238,7 @@
                     android:background="@drawable/background_timestamps"
                     android:padding="5dp"
                     android:paddingStart="10dp"
+                    android:fontFamily="@font/sf"
                     android:paddingEnd="10dp"
                     android:text="00:00"
                     android:textColor="@color/white" />

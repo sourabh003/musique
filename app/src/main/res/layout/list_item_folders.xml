@@ -23,7 +23,7 @@
         android:id="@+id/txt_folder_name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fontFamily="@font/ubuntu_bold"
+        android:fontFamily="@font/sf"
         android:gravity="center_vertical"
         android:padding="10dp"
         android:text="@string/folder_name"

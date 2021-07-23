@@ -29,22 +29,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:fontFamily="@font/ubuntu"
+            android:fontFamily="@font/sf"
             android:ellipsize="marquee"
             android:singleLine="true"
             android:gravity="center_vertical"
             android:padding="5dp"
             android:text="Song title"
             android:textColor="@color/white"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/sont_artist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:fontFamily="@font/ubuntu"
+            android:fontFamily="@font/sf"
             android:padding="5dp"
             android:text="Song Artist"
             android:textColor="@color/DarkGray"

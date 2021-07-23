@@ -21,8 +21,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.musique.adapters.TrackListAdapter;
 import com.example.musique.helpers.Song;
 import com.example.musique.services.PlayerService;
-import com.example.musique.utility.Functions;
-import com.example.musique.utility.SongsHandler;
+import com.example.musique.utils.Functions;
+import com.example.musique.utils.SongsHandler;
 
 import java.util.ArrayList;
 
@@ -119,8 +119,7 @@ public class Favorites extends AppCompatActivity implements View.OnClickListener
                 break;
 
             case R.id.btn_next_miniplayer:
-                PlayerService.nextSong();
-                PlayerService.loadMediaPlayer(this);
+                PlayerService.nextSong(this);
                 initMediaPlayer();
                 break;
         }

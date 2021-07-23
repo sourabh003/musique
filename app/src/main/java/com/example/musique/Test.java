@@ -3,8 +3,8 @@ package com.example.musique;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.musique.utility.Functions;
-import com.example.musique.utility.SongsHandler;
+import com.example.musique.utils.Functions;
+import com.example.musique.utils.SongsHandler;
 
 public class Test extends AppCompatActivity {
 

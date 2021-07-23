@@ -6,19 +6,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.musique.AlbumSongs;
 import com.example.musique.PlaylistSongs;
-import com.example.musique.Playlists;
 import com.example.musique.R;
-import com.example.musique.helpers.Album;
 import com.example.musique.helpers.Playlist;
-import com.example.musique.utility.Constants;
+import com.example.musique.utils.Constants;
+import com.example.musique.utils.Functions;
 
 import java.util.ArrayList;
 
@@ -38,7 +38,7 @@ public class PlaylistsAdapter extends ArrayAdapter<Playlist> {
         Playlist playlist = getItem(position);
         LinearLayout parentLayout = listItemView.findViewById(R.id.layout_parent);
         TextView txtPlaylistName = listItemView.findViewById(R.id.txt_playlist_name);
-        txtPlaylistName.setText(playlist.getName());
+        txtPlaylistName.setText(Functions.capitalize(playlist.getName()));
         parentLayout.setOnClickListener(v -> {
             getContext().startActivity(new Intent(getContext(), PlaylistSongs.class).putExtra(Constants.PLAYLIST_OBJECT, playlist));
         });

@@ -16,8 +16,8 @@
 
     <style name="Theme.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
         <item name="colorOnPrimary">@color/colorAccent</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -66,7 +66,7 @@
     </style>
 
     <style name="CustomTab">
-        <item name="android:fontFamily">@font/ubuntu_bold</item>
+        <item name="android:fontFamily">@font/sf</item>
     </style>
 
     <style name="Theme.Player" parent="Theme.MaterialComponents.DayNight.NoActionBar">

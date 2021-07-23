@@ -7,32 +7,15 @@
     android:elevation="8dp"
     android:orientation="vertical">
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fontFamily="@font/ubuntu_bold"
-            android:gravity="start"
-            android:padding="15dp"
-            android:text="@string/create_new_playlist"
-            android:textColor="@color/white" />
-
-        <ImageView
-            android:id="@+id/btn_close_playlist_dialog"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:padding="10dp"
-            android:src="@drawable/ic_baseline_close_24" />
-    </LinearLayout>
+        android:background="@color/colorPrimaryDark"
+        android:fontFamily="@font/sf"
+        android:gravity="start"
+        android:padding="15dp"
+        android:text="@string/create_new_playlist"
+        android:textColor="@color/white" />
 
     <View
         android:layout_width="match_parent"
@@ -49,24 +32,46 @@
         android:drawableStart="@drawable/ic_baseline_playlist_add_24"
         android:drawablePadding="10dp"
         android:drawableTint="@color/black"
-        android:fontFamily="@font/ubuntu_bold"
+        android:fontFamily="@font/sf"
         android:hint="Enter Playlist Name"
         android:padding="10dp"
         android:textSize="15sp" />
 
-    <Button
-        android:id="@+id/btn_create_playlist"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@color/colorPrimaryDark"
-        android:fontFamily="@font/ubuntu_bold"
-        android:text="Create"
-        android:textAllCaps="false"
-        android:textColor="@color/white" />
+        android:orientation="horizontal">
 
+        <Button
+            android:id="@+id/btn_close_playlist_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:textStyle="bold"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/sf"
+            android:text="Cancel"
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark" />
+
+        <Button
+            android:id="@+id/btn_create_playlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:fontFamily="@font/sf"
+            android:text="Create"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
 
 </LinearLayout>

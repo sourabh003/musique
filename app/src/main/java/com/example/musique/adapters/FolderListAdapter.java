@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.musique.FolderSongs;
 import com.example.musique.R;
-import com.example.musique.utility.Constants;
-import com.example.musique.utility.Functions;
+import com.example.musique.utils.Constants;
+import com.example.musique.utils.Functions;
 
 import java.util.ArrayList;
 

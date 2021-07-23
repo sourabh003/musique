@@ -1,14 +1,18 @@
 package com.example.musique;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,10 +27,12 @@ import com.example.musique.database.Database;
 import com.example.musique.helpers.Playlist;
 import com.example.musique.helpers.Song;
 import com.example.musique.services.PlayerService;
-import com.example.musique.utility.Constants;
-import com.example.musique.utility.Functions;
+import com.example.musique.utils.Constants;
+import com.example.musique.utils.DialogHandlers;
+import com.example.musique.utils.Functions;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.example.musique.services.PlayerService.currentSong;
 import static com.example.musique.services.PlayerService.mediaPlayer;
@@ -59,7 +65,7 @@ public class PlaylistSongs extends AppCompatActivity {
         txtPlaylistCreatedDate = findViewById(R.id.txt_playlist_created_date);
         txtPlaylistCreatedDate.setText("Created on: " + Functions.getModifiedDate(playlist.getCreatedDate()));
         txtPlaylistName = findViewById(R.id.txt_playlist_name);
-        txtPlaylistName.setText(playlist.getName());
+        txtPlaylistName.setText(Functions.capitalize(playlist.getName()));
         txtPlaylistSongCount = findViewById(R.id.txt_playlist_songs_count);
         playlistTracksContainer = findViewById(R.id.playlist_tracks_container);
         playlistTracksContainer.setOnRefreshListener(this::refreshList);
@@ -119,10 +125,6 @@ public class PlaylistSongs extends AppCompatActivity {
                 onBackPressed();
                 break;
 
-            case R.id.btn_option:
-                Toast.makeText(this, "Options", Toast.LENGTH_SHORT).show();
-                break;
-
             case R.id.btn_play_all:
                 if (!playlistTracks.isEmpty()){
                     PlayerService.playAllSongs(this, playlistTracks);
@@ -140,12 +142,44 @@ public class PlaylistSongs extends AppCompatActivity {
                 break;
 
             case R.id.btn_next_miniplayer:
-                PlayerService.nextSong();
-                PlayerService.loadMediaPlayer(this);
+                PlayerService.nextSong(this);
                 initMediaPlayer();
                 break;
 
+            case R.id.btn_option:
+                PopupMenu menu = new PopupMenu(this, view);
+                menu.inflate(R.menu.playlists_menu);
+                menu.setOnMenuItemClickListener(item -> {
+                    if (item.getItemId() == R.id.item_delete) {
+                        openPlaylistDeleteDialog();
+                        return true;
+                    }
+                    return false;
+                });
+                menu.show();
+                break;
         }
+    }
+
+    public void openPlaylistDeleteDialog(){
+        Database database = new Database(this);
+        Dialog dialog = new Dialog(this);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_delete_playlist, null);
+        dialog.setContentView(view);
+        Button btnCancel = dialog.findViewById(R.id.btn_cancel_delete);
+        Button btnDelete = dialog.findViewById(R.id.btn_confirm_delete);
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+        btnDelete.setOnClickListener(v -> {
+            dialog.dismiss();
+            Toast.makeText(this, "Playlist Deleted", Toast.LENGTH_SHORT).show();
+            new Thread(() -> {
+                database.deletePlaylist(playlist);
+            }).start();
+            finish();
+        });
+        dialog.show();
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")

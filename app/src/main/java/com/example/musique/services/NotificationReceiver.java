@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.example.musique.utility.Constants;
+import com.example.musique.utils.Constants;
 
 public class NotificationReceiver extends BroadcastReceiver {
     @Override

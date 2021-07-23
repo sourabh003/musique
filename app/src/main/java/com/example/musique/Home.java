@@ -12,6 +12,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,9 +23,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.musique.database.Database;
 import com.example.musique.helpers.Playlist;
 import com.example.musique.services.PlayerService;
-import com.example.musique.utility.Constants;
-import com.example.musique.utility.DialogHandlers;
-import com.example.musique.utility.Functions;
+import com.example.musique.utils.Constants;
+import com.example.musique.utils.DialogHandlers;
+import com.example.musique.utils.Functions;
 import com.google.android.material.snackbar.Snackbar;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -109,6 +110,8 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
     @Override
     protected void onStart() {
         super.onStart();
+        Intent intent = new Intent(this, PlayerService.class);
+        bindService(intent, this, BIND_AUTO_CREATE);
         if (!checkStoragePermission()) {
             Snackbar.make(layoutParent, "Please grant storage permission", Snackbar.LENGTH_INDEFINITE).setAction("Grant", v -> {
                 requestStoragePermission();
@@ -149,12 +152,15 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
     }
 
     private void loadPlaylists() {
-        if (checkStoragePermission() && playListView.getChildCount() == 0) {
-            handler.postDelayed(() -> {
-                for (Playlist playlist : database.getPlaylists()) {
-                    addNewPlaylist(playlist);
-                }
-            }, 1000);
+        if (checkStoragePermission()) {
+            if (playListView.getChildCount() == 0 || playListView.getChildCount() != database.getPlaylists().size()){
+                playListView.removeAllViews();
+                handler.postDelayed(() -> {
+                    for (Playlist playlist : database.getPlaylists()) {
+                        addNewPlaylist(playlist);
+                    }
+                }, 1000);
+            }
         }
     }
 
@@ -167,7 +173,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
             view.setLayoutParams(params);
             TextView txtPlaylistName = view.findViewById(R.id.txt_playlist_name);
             LinearLayout layoutParent = view.findViewById(R.id.layout_parent);
-            txtPlaylistName.setText(playlist.getName());
+            txtPlaylistName.setText(Functions.capitalize(playlist.getName()));
             layoutParent.setOnClickListener(v -> {
                 startActivity(new Intent(this, PlaylistSongs.class).putExtra(Constants.PLAYLIST_OBJECT, playlist));
             });
@@ -239,8 +245,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
                     break;
 
                 case R.id.btn_next_miniplayer:
-                    PlayerService.nextSong();
-                    PlayerService.loadMediaPlayer(this);
+                    PlayerService.nextSong(this);
                     initMediaPlayer();
                     break;
 
