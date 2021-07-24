@@ -22,17 +22,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.musique.adapters.TrackListAdapter;
+import com.example.musique.adapters.PlaylistTracksAdapter;
 import com.example.musique.database.Database;
 import com.example.musique.helpers.Playlist;
 import com.example.musique.helpers.Song;
 import com.example.musique.services.PlayerService;
 import com.example.musique.utils.Constants;
-import com.example.musique.utils.DialogHandlers;
 import com.example.musique.utils.Functions;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.example.musique.services.PlayerService.currentSong;
 import static com.example.musique.services.PlayerService.mediaPlayer;
@@ -47,7 +45,7 @@ public class PlaylistSongs extends AppCompatActivity {
     RecyclerView playlistTracksList;
 
     ArrayList<Song> playlistTracks = new ArrayList<>();
-    TrackListAdapter adapter;
+    PlaylistTracksAdapter adapter;
     Database database;
     ProgressBar loading;
 
@@ -71,7 +69,7 @@ public class PlaylistSongs extends AppCompatActivity {
         playlistTracksContainer.setOnRefreshListener(this::refreshList);
         playlistTracksList = findViewById(R.id.playlist_tracks_list);
         playlistTracksList.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new TrackListAdapter(playlistTracks, this);
+        adapter = new PlaylistTracksAdapter(playlistTracks, playlist, this);
         playlistTracksList.setAdapter(adapter);
         database = new Database(this);
         loading = findViewById(R.id.loading);
@@ -93,6 +91,13 @@ public class PlaylistSongs extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
+
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                txtPlaylistSongCount.setText(playlistTracks.size() + " Songs");
+            }
+        });
     }
 
     private void refreshList() {
@@ -105,7 +110,8 @@ public class PlaylistSongs extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (playlistTracks.isEmpty()) {
+        if (playlistTracks.isEmpty() || playlistTracks.size() != database.getSongsFromPlaylist(playlist.getId()).size()) {
+            playlistTracks.clear();
             final Handler handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(() -> {
                 playlistTracks.addAll(database.getTracksFromPlaylist(this, playlist));
@@ -126,7 +132,7 @@ public class PlaylistSongs extends AppCompatActivity {
                 break;
 
             case R.id.btn_play_all:
-                if (!playlistTracks.isEmpty()){
+                if (!playlistTracks.isEmpty()) {
                     PlayerService.playAllSongs(this, playlistTracks);
                 } else {
                     Toast.makeText(this, "No Songs in this Playlist!", Toast.LENGTH_SHORT).show();
@@ -150,9 +156,14 @@ public class PlaylistSongs extends AppCompatActivity {
                 PopupMenu menu = new PopupMenu(this, view);
                 menu.inflate(R.menu.playlists_menu);
                 menu.setOnMenuItemClickListener(item -> {
-                    if (item.getItemId() == R.id.item_delete) {
-                        openPlaylistDeleteDialog();
-                        return true;
+                    switch (item.getItemId()) {
+                        case R.id.item_delete:
+                            openPlaylistDeleteDialog();
+                            break;
+
+                        case R.id.item_add_song:
+                            startActivity(new Intent(this, AddSongToPlaylist.class).putExtra(Constants.PLAYLIST_OBJECT, playlist));
+                            break;
                     }
                     return false;
                 });
@@ -161,7 +172,7 @@ public class PlaylistSongs extends AppCompatActivity {
         }
     }
 
-    public void openPlaylistDeleteDialog(){
+    public void openPlaylistDeleteDialog() {
         Database database = new Database(this);
         Dialog dialog = new Dialog(this);
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_delete_playlist, null);

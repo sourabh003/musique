@@ -26,12 +26,13 @@ public class Database extends SQLiteOpenHelper {
     public static final String GET_FAVOURITE_SONGS = "SELECT * FROM " + FAV_SONGS_TABLE;
     private static final String PLAYLISTS_TABLE = "playlists";
     private static final String PLAYLIST_ID = "playlist_id";
+    private static final String PLAYLIST_ENTRY_ID = "entry_id";
     private static final String PLAYLIST_NAME = "playlist_name";
     private static final String PLAYLISTS_SONGS_TABLE = "playlist_songs";
     private static final String PLAYLIST_CREATED = "playlist_created_on";
-    public static final String CREATE_PLAYLISTS_TABLE = "CREATE TABLE " + PLAYLISTS_TABLE + " (" + PLAYLIST_ID + " TEXT NOT NULL UNIQUE, " + PLAYLIST_NAME + " TEXT, "+PLAYLIST_CREATED+" TEXT)";
+    public static final String CREATE_PLAYLISTS_TABLE = "CREATE TABLE " + PLAYLISTS_TABLE + " (" + PLAYLIST_ID + " TEXT NOT NULL UNIQUE, " + PLAYLIST_NAME + " TEXT, " + PLAYLIST_CREATED + " TEXT)";
     public static final String GET_PLAYLISTS = "SELECT * FROM " + PLAYLISTS_TABLE;
-    public static final String CREATE_PLAYLISTS_SONGS_TABLE = "CREATE TABLE " + PLAYLISTS_SONGS_TABLE + " (" + PLAYLIST_ID + " TEXT , " + SONG_ID + " TEXT)";
+    public static final String CREATE_PLAYLISTS_SONGS_TABLE = "CREATE TABLE " + PLAYLISTS_SONGS_TABLE + " (" + PLAYLIST_ENTRY_ID + " TEXT NOT NULL UNIQUE , " + PLAYLIST_ID + " TEXT , " + SONG_ID + " TEXT)";
     public static final String GET_PLAYLISTS_SONGS = "SELECT * FROM " + PLAYLISTS_SONGS_TABLE;
 
     public Database(Context context) {
@@ -93,8 +94,10 @@ public class Database extends SQLiteOpenHelper {
     }
 
     public void deletePlaylist(Playlist playlist) {
-        getDatabase().delete(PLAYLISTS_TABLE, PLAYLIST_ID + "=?", new String[]{playlist.getId()});
-        getDatabase().delete(PLAYLISTS_SONGS_TABLE, PLAYLIST_ID + "=?", new String[]{playlist.getId()});
+        new Thread(() -> {
+            getDatabase().delete(PLAYLISTS_TABLE, PLAYLIST_ID + "=?", new String[]{playlist.getId()});
+            getDatabase().delete(PLAYLISTS_SONGS_TABLE, PLAYLIST_ID + "=?", new String[]{playlist.getId()});
+        }).start();
     }
 
     public ArrayList<Playlist> getPlaylists() {
@@ -112,10 +115,23 @@ public class Database extends SQLiteOpenHelper {
         return playlists;
     }
 
+    public void bulkAddSongsToPlaylist(ArrayList<Song> trackList, String playlistID) {
+        new Thread(() -> {
+            for (Song song : trackList) {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(PLAYLIST_ENTRY_ID, getPlaylistEntryId(song.getId(), playlistID));
+                contentValues.put(PLAYLIST_ID, playlistID);
+                contentValues.put(SONG_ID, song.getId());
+                getDatabase().insert(PLAYLISTS_SONGS_TABLE, null, contentValues);
+            }
+        }).start();
+    }
+
     public void addSongToPlaylist(ArrayList<String> playlistIDs, String songID) {
         new Thread(() -> {
             for (String playlistID : playlistIDs) {
                 ContentValues contentValues = new ContentValues();
+                contentValues.put(PLAYLIST_ENTRY_ID, getPlaylistEntryId(songID, playlistID));
                 contentValues.put(PLAYLIST_ID, playlistID);
                 contentValues.put(SONG_ID, songID);
                 getDatabase().insert(PLAYLISTS_SONGS_TABLE, null, contentValues);
@@ -123,9 +139,13 @@ public class Database extends SQLiteOpenHelper {
         }).start();
     }
 
+    public void deleteSongFromPlaylist(String songID, String playlistID) {
+        new Thread(() -> getDatabase().delete(PLAYLISTS_SONGS_TABLE, PLAYLIST_ID + "=? AND " + SONG_ID + "=?", new String[]{playlistID, songID})).start();
+    }
+
     public ArrayList<String> getSongsFromPlaylist(String playlistID) {
         ArrayList<String> playlistSongs = new ArrayList<>();
-        Cursor cursor = getDatabase().rawQuery("SELECT " + SONG_ID + " FROM "+ PLAYLISTS_SONGS_TABLE + " WHERE " + PLAYLIST_ID + "=?", new String[]{playlistID});
+        Cursor cursor = getDatabase().rawQuery("SELECT " + SONG_ID + " FROM " + PLAYLISTS_SONGS_TABLE + " WHERE " + PLAYLIST_ID + "=?", new String[]{playlistID});
         while (cursor.moveToNext()) {
             Log.d(TAG, "getSongsFromPlaylist: " + cursor.getString(0));
             playlistSongs.add(cursor.getString(0));
@@ -137,5 +157,9 @@ public class Database extends SQLiteOpenHelper {
     public ArrayList<Song> getTracksFromPlaylist(Context context, Playlist playlist) {
         ArrayList<String> list = getSongsFromPlaylist(playlist.getId());
         return SongsHandler.getSongsByID(context, list);
+    }
+
+    public String getPlaylistEntryId(String songID, String playlistID) {
+        return playlistID + songID;
     }
 }

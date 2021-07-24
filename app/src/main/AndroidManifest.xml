@@ -15,6 +15,7 @@
         android:roundIcon="@mipmap/ic_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Musique">
+        <activity android:name=".AddSongToPlaylist"></activity>
 
         <receiver
             android:name=".services.NotificationReceiver"
@@ -25,11 +26,11 @@
                 <action android:name="ACTION_PREVIOUS" />
             </intent-filter>
         </receiver>
+
         <service
             android:name=".services.PlayerService"
             android:enabled="true"
-            android:exported="false">
-        </service>
+            android:exported="false"></service>
 
         <activity
             android:name=".PlaylistSongs"
