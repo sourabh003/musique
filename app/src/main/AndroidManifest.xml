@@ -15,7 +15,7 @@
         android:roundIcon="@mipmap/ic_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Musique">
-        <activity android:name=".AddSongToPlaylist"></activity>
+        <activity android:name=".AddSongToPlaylist" />
 
         <receiver
             android:name=".services.NotificationReceiver"
@@ -30,37 +30,20 @@
         <service
             android:name=".services.PlayerService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:exported="false" />
 
-        <activity
-            android:name=".PlaylistSongs"
-            android:theme="@style/Theme.Design.NoActionBar" />
-        <activity
-            android:name=".Playlists"
-            android:theme="@style/Theme.Design.NoActionBar" />
-        <activity
-            android:name=".FolderSongs"
-            android:theme="@style/Theme.Design.NoActionBar" />
-        <activity
-            android:name=".Folders"
-            android:theme="@style/Theme.Design.NoActionBar" />
-        <activity
-            android:name=".Favorites"
-            android:theme="@style/Theme.Design.NoActionBar" />
-        <activity
-            android:name=".AlbumSongs"
-            android:theme="@style/Theme.Design.NoActionBar" />
-        <activity
-            android:name=".Player"
-            android:theme="@style/Theme.Player" />
+        <activity android:name=".PlaylistSongs" />
+        <activity android:name=".Playlists" />
+        <activity android:name=".FolderSongs" />
+        <activity android:name=".Folders" />
+        <activity android:name=".Favorites" />
+        <activity android:name=".AlbumSongs" />
+        <activity android:name=".Player" />
         <activity android:name=".Test" />
         <activity
             android:name=".Library"
-            android:label="@string/title_activity_library"
-            android:theme="@style/Theme.Library" />
-        <activity
-            android:name=".Home"
-            android:theme="@style/Theme.Home" />
+            android:label="@string/title_activity_library" />
+        <activity android:name=".Home" />
         <activity
             android:name=".Splash"
             android:theme="@style/Theme.Splash">
