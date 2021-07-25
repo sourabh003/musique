@@ -36,7 +36,7 @@ public class PlaylistsAdapter extends ArrayAdapter<Playlist> {
             listItemView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_playlist, parent, false);
         }
         Playlist playlist = getItem(position);
-        LinearLayout parentLayout = listItemView.findViewById(R.id.layout_parent);
+        FrameLayout parentLayout = listItemView.findViewById(R.id.layout_parent);
         TextView txtPlaylistName = listItemView.findViewById(R.id.txt_playlist_name);
         txtPlaylistName.setText(Functions.capitalize(playlist.getName()));
         parentLayout.setOnClickListener(v -> {

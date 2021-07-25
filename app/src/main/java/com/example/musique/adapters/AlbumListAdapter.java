@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,8 +32,10 @@ public class AlbumListAdapter extends ArrayAdapter<Album> {
             listItemView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_albums, parent, false);
         }
         Album album = getItem(position);
-        LinearLayout parentLayout = listItemView.findViewById(R.id.layout_parent);
+        FrameLayout parentLayout = listItemView.findViewById(R.id.layout_parent);
         TextView txtAlbumName = listItemView.findViewById(R.id.txt_album_name);
+        TextView txtAlbumSongsCount = listItemView.findViewById(R.id.txt_album_count);
+        txtAlbumSongsCount.setText(album.getSongsCount() + " Songs");
         txtAlbumName.setText(album.getName());
         parentLayout.setOnClickListener(v -> {
             getContext().startActivity(new Intent(getContext(), AlbumSongs.class).putExtra(Constants.ALBUM_OBJECT, album));

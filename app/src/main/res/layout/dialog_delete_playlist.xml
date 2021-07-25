@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:layout_margin="10dp"
+    android:background="@color/colorBackground"
     android:orientation="vertical">
 
     <TextView
@@ -11,7 +12,6 @@
         android:fontFamily="@font/sf"
         android:gravity="center"
         android:padding="10dp"
-        android:background="@color/colorPrimaryDark"
         android:text="Delete Playlist"
         android:textColor="@color/white"
         android:textSize="16sp"/>
@@ -38,11 +38,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:backgroundTint="@color/white"
+            android:focusable="true"
+            android:clickable="true"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:textSize="15sp"
+            android:foreground="?attr/selectableItemBackground"
             android:fontFamily="@font/sf"
             android:text="Cancel"
             android:textAllCaps="false"
-            android:textColor="@color/colorPrimaryDark" />
+            android:textColor="@color/white" />
 
         <Button
             android:id="@+id/btn_confirm_delete"
@@ -51,7 +55,7 @@
             android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:fontFamily="@font/sf"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:backgroundTint="@color/MaterialRed"
             android:text="Delete"
             android:textAllCaps="false"
             android:textColor="@color/white" />

@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +38,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import static com.example.musique.services.PlayerService.currentSong;
 import static com.example.musique.services.PlayerService.mediaPlayer;
 
-public class Home extends AppCompatActivity implements View.OnClickListener, ServiceConnection{
+public class Home extends AppCompatActivity implements View.OnClickListener, ServiceConnection {
 
     String TAG = "Home";
     LinearLayout layoutLibraries, layoutFolders, layoutFavourites;
@@ -47,6 +48,8 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
     TextView txtSongNameMiniPlayer, txtSongArtistMiniPlayer;
     ImageView btnPlayMiniPlayer, btnNextMiniPlayer;
     Thread miniPlayerThread;
+    ProgressBar loading;
+    TextView txtNoPlaylists;
 
     Database database;
     ImageView btnCreatePlaylist;
@@ -72,6 +75,8 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
         layoutParent = findViewById(R.id.layout_parent);
         btnCreatePlaylist = findViewById(R.id.btn_create_playlist);
         playListView = findViewById(R.id.playlists_view);
+        loading = findViewById(R.id.loading);
+        txtNoPlaylists = findViewById(R.id.txt_no_playlists);
 
         layoutMiniPlayer = findViewById(R.id.layout_miniplayer);
         txtSongNameMiniPlayer = findViewById(R.id.song_title_miniplayer);
@@ -153,12 +158,24 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
 
     private void loadPlaylists() {
         if (checkStoragePermission()) {
-            if (playListView.getChildCount() == 0 || playListView.getChildCount() != database.getPlaylists().size()){
+            playListView.setVisibility(View.GONE);
+            loading.setVisibility(View.VISIBLE);
+            txtNoPlaylists.setVisibility(View.GONE);
+            if (playListView.getChildCount() == 0 || playListView.getChildCount() != database.getPlaylists().size()) {
                 playListView.removeAllViews();
                 handler.postDelayed(() -> {
-                    for (Playlist playlist : database.getPlaylists()) {
-                        addNewPlaylist(playlist);
+                    if (database.getPlaylists().size() != 0) {
+                        for (Playlist playlist : database.getPlaylists()) {
+                            addNewPlaylist(playlist);
+                        }
+                        playListView.setVisibility(View.VISIBLE);
+                        loading.setVisibility(View.GONE);
+                    } else {
+                        loading.setVisibility(View.GONE);
+                        txtNoPlaylists.setVisibility(View.VISIBLE);
+                        playListView.setVisibility(View.GONE);
                     }
+
                 }, 1000);
             }
         }
@@ -172,7 +189,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
             params.setMargins(margins, 0, 0, margins);
             view.setLayoutParams(params);
             TextView txtPlaylistName = view.findViewById(R.id.txt_playlist_name);
-            LinearLayout layoutParent = view.findViewById(R.id.layout_parent);
+            FrameLayout layoutParent = view.findViewById(R.id.layout_parent);
             txtPlaylistName.setText(Functions.capitalize(playlist.getName()));
             layoutParent.setOnClickListener(v -> {
                 startActivity(new Intent(this, PlaylistSongs.class).putExtra(Constants.PLAYLIST_OBJECT, playlist));

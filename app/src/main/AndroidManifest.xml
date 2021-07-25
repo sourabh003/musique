@@ -42,14 +42,14 @@
         <activity android:name=".Test" />
         <activity
             android:name=".Library"
-            android:label="@string/title_activity_library" />
+            android:label="@string/title_activity_library"
+            android:theme="@style/Theme.Library"/>
         <activity android:name=".Home" />
         <activity
             android:name=".Splash"
             android:theme="@style/Theme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -9,9 +9,11 @@
     <color name="white">#FFFFFFFF</color>
 
     <!--Custom colors-->
-    <color name="colorPrimary">#3F48CC</color>
-    <color name="colorPrimaryDark">#282828</color>
-    <color name="colorAccent">#AD1457</color>
+    <color name="colorPrimary">#28293D</color>
+    <color name="colorPrimaryDark">#1C1C28</color>
+    <color name="colorAccent">#FF8800</color>
+    <color name="colorBackground">#101010</color>
+    <color name="colorListItem">#1E1E1E</color>
 
     <color name="GreyTransparent">#55A0A0A0</color>
     <color name="colorLibrary">#0B92D7</color>

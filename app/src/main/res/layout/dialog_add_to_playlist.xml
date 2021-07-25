@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:layout_margin="10dp"
+    android:background="@color/colorBackground"
     android:elevation="8dp"
     android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/sf"
-            android:gravity="start"
+            android:gravity="center"
             android:padding="15dp"
             android:text="Add to Playlist"
             android:textColor="@color/white" />
@@ -26,17 +27,14 @@
             android:id="@+id/btn_close_playlist_dialog"
             android:layout_width="50dp"
             android:layout_height="match_parent"
+            android:layout_gravity="end"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
             android:padding="10dp"
-            android:src="@drawable/ic_baseline_close_24" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/Gray" />
+            android:src="@drawable/ic_baseline_close_24"
+            app:tint="@color/MaterialRed" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/txt_no_playlist"
@@ -46,6 +44,7 @@
         android:gravity="center"
         android:padding="10dp"
         android:text="No Playlists Found!"
+        android:textColor="@color/Gray"
         android:visibility="gone" />
 
     <ScrollView
@@ -69,15 +68,21 @@
 
         <Button
             android:id="@+id/btn_create_playlist"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/colorBackground"
+            android:clickable="true"
+            android:focusable="true"
             android:fontFamily="@font/sf"
+            android:foreground="?attr/selectableItemBackground"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             android:text="New Playlist"
             android:textAllCaps="false"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold" />
+            android:textColor="@color/white"
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/btn_add"
@@ -85,12 +90,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:backgroundTint="@color/colorAccent"
             android:fontFamily="@font/sf"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             android:text="Add"
             android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:textColor="@color/colorBackground"
+            android:textSize="15sp"/>
 
     </LinearLayout>
 

@@ -174,7 +174,7 @@ public class PlaylistSongs extends AppCompatActivity {
 
     public void openPlaylistDeleteDialog() {
         Database database = new Database(this);
-        Dialog dialog = new Dialog(this);
+        Dialog dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog_MinWidth);
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_delete_playlist, null);
         dialog.setContentView(view);
         Button btnCancel = dialog.findViewById(R.id.btn_cancel_delete);

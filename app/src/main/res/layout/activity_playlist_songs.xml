@@ -54,11 +54,16 @@
             android:orientation="horizontal"
             android:padding="10dp">
 
-            <ImageView
+            <FrameLayout
                 android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:padding="30dp"
-                android:src="@drawable/playlist" />
+                android:layout_height="150dp">
+
+                <ImageView
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:src="@drawable/playlist" />
+
+            </FrameLayout>
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -107,12 +112,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:backgroundTint="@color/MaterialPurple"
+                    android:backgroundTint="@color/MaterialGreen"
                     android:clickable="true"
                     android:drawableEnd="@drawable/ic_baseline_play_arrow_24"
                     android:drawableTint="@color/white"
                     android:focusable="true"
-                    android:fontFamily="@font/ubuntu_bold"
+                    android:fontFamily="@font/sf"
                     android:onClick="onClick"
                     android:text="@string/play_all"
                     android:textAllCaps="false"
@@ -139,11 +144,13 @@
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/playlist_tracks_container"
             android:layout_width="match_parent"
+            android:backgroundTint="@color/colorBackground"
             android:layout_height="wrap_content">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/playlist_tracks_list"
                 android:layout_width="match_parent"
+                android:background="@color/colorBackground"
                 android:layout_height="wrap_content"
                 tools:listitem="@layout/list_item_tracks" />
 

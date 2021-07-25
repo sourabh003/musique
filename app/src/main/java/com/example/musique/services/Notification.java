@@ -52,7 +52,7 @@ public class Notification {
         }
 
         return new NotificationCompat.Builder(context, CHANNEL_ID_2)
-                .setSmallIcon(R.mipmap.ic_logo)
+                .setSmallIcon(R.drawable.logo)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.default_album_art_2))
                 .setContentTitle(currentSong.getTitle())
                 .setContentText(currentSong.getArtist())

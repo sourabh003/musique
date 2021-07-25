@@ -3,30 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    android:background="@color/white"
+    android:background="@color/colorBackground"
     android:elevation="8dp"
     android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
         android:fontFamily="@font/sf"
         android:gravity="start"
         android:padding="15dp"
         android:text="@string/create_new_playlist"
         android:textColor="@color/white" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/Gray" />
-
     <EditText
         android:id="@+id/input_playlist_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/Gray"
         android:layout_marginTop="5dp"
         android:background="@drawable/custom_input"
         android:drawableStart="@drawable/ic_baseline_playlist_add_24"
@@ -48,14 +44,15 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:textSize="15sp"
             android:layout_marginBottom="10dp"
-            android:textStyle="bold"
             android:backgroundTint="@color/white"
             android:fontFamily="@font/sf"
             android:text="Cancel"
             android:layout_weight="1"
             android:textAllCaps="false"
-            android:textColor="@color/colorPrimaryDark" />
+            android:textColor="@color/white" />
 
         <Button
             android:id="@+id/btn_create_playlist"
@@ -66,11 +63,11 @@
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
             android:layout_marginBottom="10dp"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:backgroundTint="@color/colorAccent"
             android:fontFamily="@font/sf"
             android:text="Create"
             android:textAllCaps="false"
-            android:textColor="@color/white" />
+            android:textColor="@color/black" />
 
     </LinearLayout>
 

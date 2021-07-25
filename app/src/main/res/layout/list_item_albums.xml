@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,22 +8,51 @@
     android:elevation="5dp"
     android:orientation="vertical">
 
-    <ImageView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:scaleType="fitXY"
-        android:layout_gravity="center"
-        android:src="@drawable/default_album_art_2" />
+        android:layout_height="170dp"
+        android:background="@drawable/default_album_art_2">
 
-    <TextView
-        android:id="@+id/txt_album_name"
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:src="@drawable/album_gradient" />
+
+    </FrameLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/sf"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="@string/albums"
-        android:textColor="@color/colorPrimaryDark" />
+        android:layout_gravity="bottom|end"
+        android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/txt_album_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sf"
+            android:gravity="end"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/albums"
+            android:textColor="@color/white" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/txt_album_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sf"
+            android:gravity="end"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="10dp"
+            android:text="0 Songs"
+            android:textColor="@color/Gray"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+</FrameLayout>

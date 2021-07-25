@@ -28,7 +28,7 @@ public class DialogHandlers {
 
     public static void showAddToPlaylistDialog(Context context, Activity activity) {
         Database database = new Database(context);
-        final Dialog dialog = new Dialog(context);
+        final Dialog dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog_MinWidth);
         dialog.setContentView(R.layout.dialog_add_to_playlist);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setCancelable(false);
@@ -77,7 +77,7 @@ public class DialogHandlers {
 
     public static void showCreatePlaylistDialog(Context context, Activity activity, boolean fromPlayer) {
         Database database = new Database(context);
-        final Dialog dialog = new Dialog(context);
+        final Dialog dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog_MinWidth);
         dialog.setContentView(R.layout.dialog_create_playlist);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setCancelable(false);

@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@color/colorLibrary"
+        android:background="@color/colorPrimaryDark"
         android:theme="@style/Theme.Musique.AppBarOverlay">
 
         <LinearLayout
@@ -37,7 +37,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/sf"
                 android:gravity="center"
-                android:minHeight="?actionBarSize"
+                android:minHeight="?attr/actionBarSize"
                 android:text="Library"
                 android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
                 android:visibility="visible" />
@@ -75,7 +75,9 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorLibrary"
+            android:background="@color/colorPrimaryDark"
+            app:tabTextColor="@color/Gray"
+            app:tabSelectedTextColor="@color/white"
             android:theme="@style/CustomTab" />
     </com.google.android.material.appbar.AppBarLayout>
 
