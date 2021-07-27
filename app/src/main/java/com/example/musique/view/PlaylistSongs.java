@@ -1,4 +1,4 @@
-package com.example.musique;
+package com.example.musique.view;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -22,6 +22,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
+import com.example.musique.R;
 import com.example.musique.adapters.PlaylistTracksAdapter;
 import com.example.musique.database.Database;
 import com.example.musique.helpers.Playlist;
@@ -51,7 +53,7 @@ public class PlaylistSongs extends AppCompatActivity {
 
     LinearLayout layoutMiniPlayer;
     TextView txtSongNameMiniPlayer, txtSongArtistMiniPlayer;
-    ImageView btnPlayMiniPlayer, btnNextMiniPlayer;
+    ImageView btnPlayMiniPlayer, btnNextMiniPlayer, viewPlaylistImage;
     Thread miniPlayerThread;
 
     @Override
@@ -62,6 +64,7 @@ public class PlaylistSongs extends AppCompatActivity {
 
         txtPlaylistCreatedDate = findViewById(R.id.txt_playlist_created_date);
         txtPlaylistCreatedDate.setText("Created on: " + Functions.getModifiedDate(playlist.getCreatedDate()));
+        viewPlaylistImage = findViewById(R.id.view_playlist_image);
         txtPlaylistName = findViewById(R.id.txt_playlist_name);
         txtPlaylistName.setText(Functions.capitalize(playlist.getName()));
         txtPlaylistSongCount = findViewById(R.id.txt_playlist_songs_count);
@@ -118,11 +121,24 @@ public class PlaylistSongs extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
                 Functions.showLoading(false, loading);
                 txtPlaylistSongCount.setText(playlistTracks.size() + " Songs");
+                Glide.with(this).load(Functions.getPlaylistImage(this, playlist.getImage())).error(R.drawable.playlist).into(viewPlaylistImage);
             }, 1000);
         }
         if (!miniPlayerThread.isAlive()) {
             miniPlayerThread.start();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updatePlaylist();
+    }
+
+    private void updatePlaylist() {
+        playlist = database.getUpdatedPlaylist(playlist);
+        Glide.with(this).load(Functions.getPlaylistImage(this, playlist.getImage())).error(R.drawable.playlist).into(viewPlaylistImage);
+        txtPlaylistName.setText(playlist.getName());
     }
 
     public void onClick(View view) {
@@ -164,6 +180,15 @@ public class PlaylistSongs extends AppCompatActivity {
                         case R.id.item_add_song:
                             startActivity(new Intent(this, AddSongToPlaylist.class).putExtra(Constants.PLAYLIST_OBJECT, playlist));
                             break;
+
+                        case R.id.item_edit_playlist:
+                            startActivity(
+                                    new Intent(this, PlaylistInfo.class)
+                                            .putExtra(Constants.PLAYLIST_OBJECT, playlist)
+                                            .putExtra(Constants.PLAYLIST_ACTION, Constants.PLAYLIST_ACTION_EDIT)
+                            );
+                            break;
+
                     }
                     return false;
                 });
@@ -186,7 +211,7 @@ public class PlaylistSongs extends AppCompatActivity {
             dialog.dismiss();
             Toast.makeText(this, "Playlist Deleted", Toast.LENGTH_SHORT).show();
             new Thread(() -> {
-                database.deletePlaylist(playlist);
+                database.deletePlaylist(this, playlist);
             }).start();
             finish();
         });

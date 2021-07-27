@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".services.ApplicationClass"
@@ -15,7 +16,9 @@
         android:roundIcon="@mipmap/ic_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Musique">
-        <activity android:name=".AddSongToPlaylist" />
+        <activity android:name=".view.EditAlbum"></activity>
+        <activity android:name=".view.PlaylistInfo" />
+        <activity android:name=".view.AddSongToPlaylist" />
 
         <receiver
             android:name=".services.NotificationReceiver"
@@ -32,24 +35,25 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".PlaylistSongs" />
-        <activity android:name=".Playlists" />
-        <activity android:name=".FolderSongs" />
-        <activity android:name=".Folders" />
-        <activity android:name=".Favorites" />
-        <activity android:name=".AlbumSongs" />
-        <activity android:name=".Player" />
-        <activity android:name=".Test" />
+        <activity android:name=".view.PlaylistSongs" />
+        <activity android:name=".view.Playlists" />
+        <activity android:name=".view.FolderSongs" />
+        <activity android:name=".view.Folders" />
+        <activity android:name=".view.Favorites" />
+        <activity android:name=".view.AlbumSongs" />
+        <activity android:name=".view.Player" />
+        <activity android:name=".view.Test" />
         <activity
-            android:name=".Library"
+            android:name=".view.Library"
             android:label="@string/title_activity_library"
-            android:theme="@style/Theme.Library"/>
-        <activity android:name=".Home" />
+            android:theme="@style/Theme.Library" />
+        <activity android:name=".view.Home" />
         <activity
-            android:name=".Splash"
+            android:name=".view.Splash"
             android:theme="@style/Theme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

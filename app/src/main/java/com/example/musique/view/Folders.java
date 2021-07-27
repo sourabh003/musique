@@ -1,4 +1,4 @@
-package com.example.musique;
+package com.example.musique.view;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.musique.R;
 import com.example.musique.adapters.FolderListAdapter;
 import com.example.musique.services.PlayerService;
 import com.example.musique.utils.Functions;

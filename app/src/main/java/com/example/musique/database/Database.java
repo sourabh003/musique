@@ -6,7 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.musique.helpers.Album;
 import com.example.musique.helpers.Playlist;
 import com.example.musique.helpers.Song;
 import com.example.musique.utils.Functions;
@@ -30,10 +32,16 @@ public class Database extends SQLiteOpenHelper {
     private static final String PLAYLIST_NAME = "playlist_name";
     private static final String PLAYLISTS_SONGS_TABLE = "playlist_songs";
     private static final String PLAYLIST_CREATED = "playlist_created_on";
-    public static final String CREATE_PLAYLISTS_TABLE = "CREATE TABLE " + PLAYLISTS_TABLE + " (" + PLAYLIST_ID + " TEXT NOT NULL UNIQUE, " + PLAYLIST_NAME + " TEXT, " + PLAYLIST_CREATED + " TEXT)";
+    private static final String PLAYLIST_IMAGE = "playlist_image";
+    public static final String CREATE_PLAYLISTS_TABLE = "CREATE TABLE " + PLAYLISTS_TABLE + " (" + PLAYLIST_ID + " TEXT NOT NULL UNIQUE, " + PLAYLIST_NAME + " TEXT, " + PLAYLIST_CREATED + " TEXT, " + PLAYLIST_IMAGE + " TEXT)";
     public static final String GET_PLAYLISTS = "SELECT * FROM " + PLAYLISTS_TABLE;
     public static final String CREATE_PLAYLISTS_SONGS_TABLE = "CREATE TABLE " + PLAYLISTS_SONGS_TABLE + " (" + PLAYLIST_ENTRY_ID + " TEXT NOT NULL UNIQUE , " + PLAYLIST_ID + " TEXT , " + SONG_ID + " TEXT)";
     public static final String GET_PLAYLISTS_SONGS = "SELECT * FROM " + PLAYLISTS_SONGS_TABLE;
+    public static final String ALBUMS_TABLE = "albums";
+    public static final String ALBUM_ID = "album_id";
+    public static final String ALBUM_ART = "album_art";
+    public static final String CREATE_ALBUMS_TABLE = "CREATE TABLE " + ALBUMS_TABLE + " (" + ALBUM_ID + " TEXT NOT NULL UNIQUE, " + ALBUM_ART + " TEXT)";
+    public static final String GET_ALBUM_ART = "SELECT * FROM " + ALBUMS_TABLE;
 
     public Database(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -44,6 +52,7 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL(CREATE_FAV_SONGS_TABLE);
         db.execSQL(CREATE_PLAYLISTS_TABLE);
         db.execSQL(CREATE_PLAYLISTS_SONGS_TABLE);
+        db.execSQL(CREATE_ALBUMS_TABLE);
     }
 
     @Override
@@ -51,6 +60,7 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + FAV_SONGS_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + PLAYLISTS_SONGS_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + PLAYLISTS_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + ALBUMS_TABLE);
         onCreate(db);
     }
 
@@ -80,23 +90,31 @@ public class Database extends SQLiteOpenHelper {
         new Thread(() -> getDatabase().delete(FAV_SONGS_TABLE, SONG_ID + "=?", new String[]{songID})).start();
     }
 
-    public String createPlaylist(String name, String time) {
-        String id = Functions.generateID();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(PLAYLIST_ID, id);
-        contentValues.put(PLAYLIST_NAME, name.toLowerCase());
-        contentValues.put(PLAYLIST_CREATED, time);
-        if (getDatabase().insert(PLAYLISTS_TABLE, null, contentValues) != -1) {
-            return id;
-        } else {
-            return null;
-        }
+    public void createPlaylist(Playlist playlist) {
+        new Thread(() -> {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(PLAYLIST_ID, playlist.getId());
+            contentValues.put(PLAYLIST_NAME, playlist.getName().toLowerCase());
+            contentValues.put(PLAYLIST_CREATED, playlist.getCreatedDate());
+            contentValues.put(PLAYLIST_IMAGE, playlist.getImage());
+            getDatabase().insert(PLAYLISTS_TABLE, null, contentValues);
+        }).start();
     }
 
-    public void deletePlaylist(Playlist playlist) {
+    public void deletePlaylist(Context context, Playlist playlist) {
         new Thread(() -> {
+            Functions.deleteImageFromInternalStorage(context, playlist.getImage());
             getDatabase().delete(PLAYLISTS_TABLE, PLAYLIST_ID + "=?", new String[]{playlist.getId()});
             getDatabase().delete(PLAYLISTS_SONGS_TABLE, PLAYLIST_ID + "=?", new String[]{playlist.getId()});
+        }).start();
+    }
+
+    public void updatePlaylist(Playlist playlist) {
+        new Thread(() -> {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(PLAYLIST_NAME, playlist.getName());
+            contentValues.put(PLAYLIST_IMAGE, playlist.getImage());
+            getDatabase().update(PLAYLISTS_TABLE, contentValues, PLAYLIST_ID + "=?", new String[]{playlist.getId()});
         }).start();
     }
 
@@ -107,7 +125,8 @@ public class Database extends SQLiteOpenHelper {
             Playlist playlist = new Playlist(
                     cursor.getString(0),
                     cursor.getString(1),
-                    cursor.getString(2)
+                    cursor.getString(2),
+                    cursor.getString(3)
             );
             playlists.add(playlist);
         }
@@ -125,6 +144,21 @@ public class Database extends SQLiteOpenHelper {
                 getDatabase().insert(PLAYLISTS_SONGS_TABLE, null, contentValues);
             }
         }).start();
+    }
+
+    public Playlist getUpdatedPlaylist(Playlist playlist) {
+        Playlist updatedPlaylist = null;
+        Cursor cursor = getDatabase().rawQuery("SELECT * FROM " + PLAYLISTS_TABLE + " WHERE " + PLAYLIST_ID + "=?", new String[]{playlist.getId()});
+        while (cursor.moveToNext()) {
+            updatedPlaylist = new Playlist(
+                    cursor.getString(0),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getString(3)
+            );
+        }
+        cursor.close();
+        return updatedPlaylist;
     }
 
     public void addSongToPlaylist(ArrayList<String> playlistIDs, String songID) {
@@ -161,5 +195,20 @@ public class Database extends SQLiteOpenHelper {
 
     public String getPlaylistEntryId(String songID, String playlistID) {
         return playlistID + songID;
+    }
+
+    public void updateAlbumArt(Context context, Album album) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ALBUM_ID, album.getId());
+        contentValues.put(ALBUM_ART, album.getArt());
+        Cursor cursor = getDatabase().rawQuery("SELECT * FROM " + ALBUMS_TABLE + " WHERE " + ALBUM_ID + "=?", new String[]{album.getId()});
+        if (cursor.getCount() == 0) {
+            getDatabase().insert(ALBUMS_TABLE, null, contentValues);
+            Toast.makeText(context, "Inserting...", Toast.LENGTH_SHORT).show();
+        } else {
+            getDatabase().update(ALBUMS_TABLE, contentValues, ALBUM_ID + "=?", new String[]{album.getId()});
+            Toast.makeText(context, "Updating...", Toast.LENGTH_SHORT).show();
+        }
+        cursor.close();
     }
 }

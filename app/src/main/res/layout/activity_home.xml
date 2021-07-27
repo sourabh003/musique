@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    tools:context=".Home">
+    tools:context=".view.Home">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
@@ -170,6 +170,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:layout_marginTop="10dp"
             android:background="@color/GreyTransparent"
             android:orientation="horizontal">
@@ -185,6 +186,12 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
+            <ProgressBar
+                android:id="@+id/loading"
+                android:layout_width="30dp"
+                android:visibility="gone"
+                android:layout_height="match_parent" />
+
             <ImageView
                 android:id="@+id/btn_create_playlist"
                 android:layout_width="50dp"
@@ -198,6 +205,19 @@
                 android:src="@drawable/ic_baseline_add_24"
                 app:tint="@color/white" />
 
+            <ImageView
+                android:id="@+id/btn_refresh_playlist"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:onClick="onClick"
+                android:padding="10dp"
+                android:src="@drawable/ic_baseline_refresh_24"
+                app:tint="@color/white" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -206,35 +226,28 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:orientation="horizontal"
-            android:visibility="gone"
-            android:padding="5dp"/>
-
-        <ProgressBar
-            android:id="@+id/loading"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:visibility="visible" />
+            android:padding="5dp"
+            android:visibility="gone" />
 
         <TextView
-            android:id="@+id/txt_no_playlists"
+            android:id="@+id/view_no_playlists"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:text="No Playlists Found!"
             android:fontFamily="@font/sf"
+            android:visibility="gone"
+            android:textColor="@color/Gray"
             android:gravity="center"
-            android:padding="10dp"
-            android:text="No Playlists Available!"
-            android:textColor="@color/Gray" />
+            android:padding="10dp"/>
 
         <Button
             android:id="@+id/btn_all_playlists"
             android:layout_width="match_parent"
+            android:visibility="gone"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/custom_rounded_button"
             android:clickable="true"

@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -14,11 +16,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.musique.PlaylistSongs;
+import com.bumptech.glide.Glide;
 import com.example.musique.R;
 import com.example.musique.database.Database;
 import com.example.musique.helpers.Playlist;
+import com.example.musique.view.PlaylistInfo;
+import com.example.musique.view.PlaylistSongs;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -69,43 +74,51 @@ public class DialogHandlers {
 
         btnCreate.setOnClickListener(v -> {
             dialog.dismiss();
-            showCreatePlaylistDialog(context, activity, true);
+            context.startActivity(new Intent(context, PlaylistInfo.class).putExtra(Constants.PLAYLIST_ACTION, Constants.PLAYLIST_ACTION_CREATE));
         });
         btnClosePlaylistDialog.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
 
-    public static void showCreatePlaylistDialog(Context context, Activity activity, boolean fromPlayer) {
-        Database database = new Database(context);
-        final Dialog dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog_MinWidth);
-        dialog.setContentView(R.layout.dialog_create_playlist);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialog.setCancelable(false);
-
-        EditText inputPlaylistName = dialog.findViewById(R.id.input_playlist_name);
-        Button btnClosePlaylistDialog = dialog.findViewById(R.id.btn_close_playlist_dialog);
-        Button btnCreatePlaylist = dialog.findViewById(R.id.btn_create_playlist);
-        btnCreatePlaylist.setOnClickListener(v -> {
-            String name = inputPlaylistName.getText().toString().trim();
-            if (!name.isEmpty()) {
-                dialog.dismiss();
-                Functions.closeKeyboard(activity);
-                String time = String.valueOf(System.currentTimeMillis());
-                String id = database.createPlaylist(name, time);
-                Playlist playlist = new Playlist(id, name, time);
-                if (fromPlayer) {
-                    showAddToPlaylistDialog(context, activity);
-                } else {
-                    context.startActivity(new Intent(context, PlaylistSongs.class).putExtra(Constants.PLAYLIST_OBJECT, playlist));
-                }
-                Toast.makeText(context, name + " Playlist Created!", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(context, "Invalid Name!", Toast.LENGTH_SHORT).show();
-            }
-        });
-        btnClosePlaylistDialog.setOnClickListener(v -> dialog.dismiss());
-        dialog.show();
-    }
+//    public static void showCreatePlaylistDialog(Context context, Activity activity, boolean fromPlayer) {
+//        Database database = new Database(context);
+//        final Dialog dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog_MinWidth);
+//        dialog.setContentView(R.layout.dialog_create_playlist);
+//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+//        dialog.setCancelable(false);
+//
+//        EditText inputPlaylistName = dialog.findViewById(R.id.input_playlist_name);
+//        Button btnClosePlaylistDialog = dialog.findViewById(R.id.btn_close_playlist_dialog);
+//        Button btnCreatePlaylist = dialog.findViewById(R.id.btn_create_playlist);
+//        ImageView viewPlaylistImage = dialog.findViewById(R.id.view_playlist_image);
+//        ImageView btnAddImage = dialog.findViewById(R.id.btn_add_image);
+//        btnAddImage.setOnClickListener(v -> {
+//            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//            intent.setType("image/*");
+//            int PICK_IMAGE = 0;
+//            activity.startActivityForResult(intent, PICK_IMAGE);
+//        });
+//        btnCreatePlaylist.setOnClickListener(v -> {
+//            String name = inputPlaylistName.getText().toString().trim();
+//            if (!name.isEmpty()) {
+//                dialog.dismiss();
+//                Functions.closeKeyboard(activity);
+//                String time = String.valueOf(System.currentTimeMillis());
+//                String id = database.createPlaylist(name, time, Constants.DEFAULT_PLAYLIST_IMAGE);
+//                Playlist playlist = new Playlist(id, name, time, Constants.DEFAULT_PLAYLIST_IMAGE);
+//                if (fromPlayer) {
+//                    showAddToPlaylistDialog(context, activity);
+//                } else {
+//                    context.startActivity(new Intent(context, PlaylistSongs.class).putExtra(Constants.PLAYLIST_OBJECT, playlist));
+//                }
+//                Toast.makeText(context, name + " Playlist Created!", Toast.LENGTH_SHORT).show();
+//            } else {
+//                Toast.makeText(context, "Invalid Name!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        btnClosePlaylistDialog.setOnClickListener(v -> dialog.dismiss());
+//        dialog.show();
+//    }
 
     public static boolean openPlaylistDeleteDialog(Context context, Playlist playlist) {
         Database database = new Database(context);
@@ -122,7 +135,7 @@ public class DialogHandlers {
             dialog.dismiss();
             Toast.makeText(context, "Playlist Deleted", Toast.LENGTH_SHORT).show();
             new Thread(() -> {
-                database.deletePlaylist(playlist);
+                database.deletePlaylist(context, playlist);
             }).start();
             deleted.set(true);
         });

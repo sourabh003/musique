@@ -1,4 +1,4 @@
-package com.example.musique;
+package com.example.musique.view;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -21,11 +22,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+import com.example.musique.R;
 import com.example.musique.database.Database;
 import com.example.musique.helpers.Playlist;
 import com.example.musique.services.PlayerService;
 import com.example.musique.utils.Constants;
-import com.example.musique.utils.DialogHandlers;
 import com.example.musique.utils.Functions;
 import com.google.android.material.snackbar.Snackbar;
 import com.karumi.dexter.Dexter;
@@ -49,7 +51,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
     ImageView btnPlayMiniPlayer, btnNextMiniPlayer;
     Thread miniPlayerThread;
     ProgressBar loading;
-    TextView txtNoPlaylists;
+    TextView viewNoPlaylists;
 
     Database database;
     ImageView btnCreatePlaylist;
@@ -76,7 +78,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
         btnCreatePlaylist = findViewById(R.id.btn_create_playlist);
         playListView = findViewById(R.id.playlists_view);
         loading = findViewById(R.id.loading);
-        txtNoPlaylists = findViewById(R.id.txt_no_playlists);
+        viewNoPlaylists = findViewById(R.id.view_no_playlists);
 
         layoutMiniPlayer = findViewById(R.id.layout_miniplayer);
         txtSongNameMiniPlayer = findViewById(R.id.song_title_miniplayer);
@@ -128,8 +130,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
         new Thread(() -> {
             PlayerService.favouriteSongsList.addAll(database.getFavouriteSongs());
         }).start();
-        loadPlaylists();
-
+        refreshPlaylists();
     }
 
     @Override
@@ -158,9 +159,10 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
 
     private void loadPlaylists() {
         if (checkStoragePermission()) {
+            Functions.showLoading(true, loading);
+            viewNoPlaylists.setVisibility(View.GONE);
             playListView.setVisibility(View.GONE);
-            loading.setVisibility(View.VISIBLE);
-            txtNoPlaylists.setVisibility(View.GONE);
+            findViewById(R.id.btn_all_playlists).setVisibility(View.GONE);
             if (playListView.getChildCount() == 0 || playListView.getChildCount() != database.getPlaylists().size()) {
                 playListView.removeAllViews();
                 handler.postDelayed(() -> {
@@ -168,15 +170,21 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
                         for (Playlist playlist : database.getPlaylists()) {
                             addNewPlaylist(playlist);
                         }
+                        Functions.showLoading(false, loading);
                         playListView.setVisibility(View.VISIBLE);
-                        loading.setVisibility(View.GONE);
+                        findViewById(R.id.btn_all_playlists).setVisibility(View.VISIBLE);
                     } else {
-                        loading.setVisibility(View.GONE);
-                        txtNoPlaylists.setVisibility(View.VISIBLE);
+                        Functions.showLoading(false, loading);
                         playListView.setVisibility(View.GONE);
+                        viewNoPlaylists.setVisibility(View.VISIBLE);
+                        findViewById(R.id.btn_all_playlists).setVisibility(View.GONE);
                     }
 
                 }, 1000);
+            } else {
+                Functions.showLoading(false, loading);
+                playListView.setVisibility(View.VISIBLE);
+                findViewById(R.id.btn_all_playlists).setVisibility(View.VISIBLE);
             }
         }
     }
@@ -190,6 +198,8 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
             view.setLayoutParams(params);
             TextView txtPlaylistName = view.findViewById(R.id.txt_playlist_name);
             FrameLayout layoutParent = view.findViewById(R.id.layout_parent);
+            ImageView viewPlaylistImage = view.findViewById(R.id.view_playlist_image);
+            Glide.with(this).load(Functions.getPlaylistImage(this, playlist.getImage())).error(R.drawable.playlist).into(viewPlaylistImage);
             txtPlaylistName.setText(Functions.capitalize(playlist.getName()));
             layoutParent.setOnClickListener(v -> {
                 startActivity(new Intent(this, PlaylistSongs.class).putExtra(Constants.PLAYLIST_OBJECT, playlist));
@@ -267,16 +277,28 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
                     break;
 
                 case R.id.btn_create_playlist:
-                    DialogHandlers.showCreatePlaylistDialog(this, this, false);
+                    startActivity(
+                            new Intent(this, PlaylistInfo.class)
+                                    .putExtra(Constants.PLAYLIST_ACTION, Constants.PLAYLIST_ACTION_CREATE)
+                    );
                     break;
 
                 case R.id.btn_all_playlists:
                     startActivity(new Intent(this, Playlists.class));
                     break;
+
+                case R.id.btn_refresh_playlist:
+                    refreshPlaylists();
+                    break;
             }
         } else {
             Toast.makeText(this, "Please grant Storage Permission first", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void refreshPlaylists() {
+        playListView.removeAllViews();
+        loadPlaylists();
     }
 
     private void updateMiniPlayerAction() {

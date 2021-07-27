@@ -3,14 +3,20 @@ package com.example.musique.utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 
-import com.example.musique.helpers.Song;
-
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
@@ -92,7 +98,57 @@ public class Functions {
                 TypedValue.COMPLEX_UNIT_DIP, sizeInDP, context.getResources().getDisplayMetrics());
     }
 
-    public static String capitalize(String string){
+    public static String capitalize(String string) {
         return string.substring(0, 1).toUpperCase() + string.substring(1);
+    }
+
+    public static Bitmap getBitmapFromUri(Context context, Uri uri) throws IOException {
+        ParcelFileDescriptor parcelFileDescriptor = context.getContentResolver().openFileDescriptor(uri, "r");
+        FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+        Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+        parcelFileDescriptor.close();
+        return image;
+    }
+
+    public static String saveImageToInternalStorage(Context context, Bitmap bitmap) {
+        File directory = new File(context.getFilesDir(), Constants.IMAGES_DIRECTORY);
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+        String name = System.currentTimeMillis() + Constants.IMAGE_JPG;
+        new Thread(() -> {
+            File path = new File(directory, name);
+            FileOutputStream fos;
+            try {
+                fos = new FileOutputStream(path);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fos);
+                fos.close();
+                Log.d("Functions", "saveImageToInternalStorage: " + path + " : " + path.exists());
+            } catch (Exception e) {
+                Log.e("SAVE_IMAGE", e.getMessage(), e);
+            }
+        }).start();
+        return name;
+    }
+
+    public static void deleteImageFromInternalStorage(Context context, String image) {
+        File directory = new File(context.getFilesDir(), Constants.IMAGES_DIRECTORY);
+        new Thread(() -> {
+            File path = new File(directory, image);
+            if (path.exists()){
+                path.delete();
+            }
+        }).start();
+    }
+
+    public static File getPlaylistImage(Context context, String image) {
+        File directory = new File(context.getFilesDir(), Constants.IMAGES_DIRECTORY);
+        return new File(directory, image);
+    }
+
+    public static Bitmap compressBitmap(Bitmap original){
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        original.compress(Bitmap.CompressFormat.JPEG, 50, out);
+        return BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
     }
 }

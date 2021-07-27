@@ -5,6 +5,10 @@
         android:icon="@drawable/ic_baseline_add_24"
         android:title="Add Songs" />
     <item
+        android:id="@+id/item_edit_playlist"
+        android:icon="@drawable/ic_baseline_edit_24"
+        android:title="Edit Playlist" />
+    <item
         android:id="@+id/item_delete"
         android:icon="@drawable/ic_baseline_delete_24"
         android:title="Delete Playlist" />

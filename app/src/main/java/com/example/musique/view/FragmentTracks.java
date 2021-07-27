@@ -1,4 +1,4 @@
-package com.example.musique;
+package com.example.musique.view;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.musique.R;
 import com.example.musique.adapters.TrackListAdapter;
 import com.example.musique.helpers.Song;
 import com.example.musique.utils.Functions;

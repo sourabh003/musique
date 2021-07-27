@@ -1,8 +1,6 @@
-package com.example.musique;
+package com.example.musique.view;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -14,9 +12,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.musique.R;
 import com.example.musique.database.Database;
 import com.example.musique.services.PlayerService;
-import com.example.musique.utils.CacheHandlers;
 import com.example.musique.utils.Constants;
 import com.example.musique.utils.DialogHandlers;
 import com.example.musique.utils.Functions;
@@ -24,7 +22,6 @@ import com.example.musique.utils.Functions;
 import static com.example.musique.services.PlayerService.currentSong;
 import static com.example.musique.services.PlayerService.isLibraryRepeating;
 import static com.example.musique.services.PlayerService.mediaPlayer;
-import static com.example.musique.services.PlayerService.songIndex;
 
 public class Player extends AppCompatActivity implements View.OnClickListener {
 

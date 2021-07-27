@@ -1,8 +1,10 @@
-package com.example.musique;
+package com.example.musique.view;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.musique.R;
 import com.example.musique.utils.Functions;
 import com.example.musique.utils.SongsHandler;
 

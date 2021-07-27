@@ -1,4 +1,4 @@
-package com.example.musique;
+package com.example.musique.view;
 
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.musique.R;
 import com.example.musique.services.Notification;
 import com.example.musique.services.PlayerService;
 import com.example.musique.utils.Constants;

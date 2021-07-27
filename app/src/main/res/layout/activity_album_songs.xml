@@ -34,6 +34,7 @@
             android:layout_width="?attr/actionBarSize"
             android:layout_height="match_parent"
             android:layout_gravity="end"
+            android:onClick="onClick"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
@@ -57,10 +58,22 @@
             android:orientation="horizontal"
             android:padding="10dp">
 
-            <ImageView
+            <FrameLayout
                 android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:src="@drawable/default_album_art_2" />
+                android:layout_height="150dp">
+
+                <ImageView
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:src="@drawable/album_gradient" />
+
+                <ImageView
+                    android:id="@+id/view_album_art"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:src="@drawable/default_album_art_2" />
+
+            </FrameLayout>
 
             <RelativeLayout
                 android:layout_width="0dp"

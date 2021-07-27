@@ -7,11 +7,24 @@ public class Playlist implements Serializable {
     String id;
     String name;
     String createdDate;
+    String image;
 
-    public Playlist(String id, String name, String createdDate) {
+    public Playlist() {
+    }
+
+    public Playlist(String id, String name, String createdDate, String image) {
         this.id = id;
         this.name = name;
         this.createdDate = createdDate;
+        this.image = image;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getCreatedDate() {

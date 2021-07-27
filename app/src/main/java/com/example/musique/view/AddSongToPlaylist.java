@@ -1,4 +1,4 @@
-package com.example.musique;
+package com.example.musique.view;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.musique.R;
 import com.example.musique.adapters.AddSongToPlaylistAdapter;
 import com.example.musique.database.Database;
 import com.example.musique.helpers.Playlist;

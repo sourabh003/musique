@@ -1,4 +1,4 @@
-package com.example.musique;
+package com.example.musique.view;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.musique.R;
 import com.example.musique.services.PlayerService;
 import com.example.musique.ui.main.SectionsPagerAdapter;
 import com.example.musique.utils.Functions;

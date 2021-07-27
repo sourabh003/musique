@@ -19,4 +19,11 @@ public class Constants {
     public static final String BROADCAST_ACTION = "BROADCAST_ACTION";
     public static final String PLAY = "PLAY";
     public static final String PAUSE = "PAUSE";
+    public static final String IMAGES_DIRECTORY = "images";
+    public static final String IMAGE_JPG = ".jpg";
+    public static final String DEFAULT_PLAYLIST_IMAGE = "default_image";
+    public static final String IMAGE_PNG = ".png";
+    public static final String PLAYLIST_ACTION_CREATE = "CREATE_PLAYLIST";
+    public static final String PLAYLIST_ACTION_EDIT = "EDIT_PLAYLIST";
+    public static final String PLAYLIST_ACTION = "PLAYLIST_ACTION";
 }

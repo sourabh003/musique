@@ -1,4 +1,4 @@
-package com.example.musique;
+package com.example.musique.view;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.musique.R;
 import com.example.musique.adapters.AlbumListAdapter;
 import com.example.musique.helpers.Album;
 import com.example.musique.utils.Functions;

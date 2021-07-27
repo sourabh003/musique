@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.musique.FragmentAlbums;
-import com.example.musique.FragmentTracks;
+import com.example.musique.view.FragmentAlbums;
+import com.example.musique.view.FragmentTracks;
 import com.example.musique.R;
 
 import org.jetbrains.annotations.NotNull;

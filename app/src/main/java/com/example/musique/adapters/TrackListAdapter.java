@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.musique.Player;
+import com.example.musique.view.Player;
 import com.example.musique.R;
 import com.example.musique.helpers.Song;
 import com.example.musique.services.PlayerService;

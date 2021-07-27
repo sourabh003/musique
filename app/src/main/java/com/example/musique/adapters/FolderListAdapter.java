@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.musique.FolderSongs;
+import com.example.musique.view.FolderSongs;
 import com.example.musique.R;
 import com.example.musique.utils.Constants;
 import com.example.musique.utils.Functions;

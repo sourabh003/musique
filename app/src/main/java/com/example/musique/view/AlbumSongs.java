@@ -1,4 +1,4 @@
-package com.example.musique;
+package com.example.musique.view;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -7,38 +7,45 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.musique.adapters.PlaylistsAdapter;
-import com.example.musique.database.Database;
-import com.example.musique.helpers.Playlist;
+import com.example.musique.R;
+import com.example.musique.adapters.TrackListAdapter;
+import com.example.musique.helpers.Album;
+import com.example.musique.helpers.Song;
 import com.example.musique.services.PlayerService;
-import com.example.musique.utils.DialogHandlers;
+import com.example.musique.utils.Constants;
 import com.example.musique.utils.Functions;
+import com.example.musique.utils.SongsHandler;
 
 import java.util.ArrayList;
 
 import static com.example.musique.services.PlayerService.currentSong;
 import static com.example.musique.services.PlayerService.mediaPlayer;
 
-public class Playlists extends AppCompatActivity {
 
-    public static final String TAG = "Playlists";
+public class AlbumSongs extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
+    private static final String TAG = "AlbumSongs";
+    Album album;
+    ImageView btnBack;
+    TextView txtAlbumName, txtAlbumArtist, txtSongsCount;
     ProgressBar loading;
-    GridView playlistsView;
-    Database database;
+    SwipeRefreshLayout albumTrackListContainer;
+    RecyclerView albumTrackListView;
+    ImageView viewAlbumArt;
 
-    ArrayList<Playlist> playlists = new ArrayList<>();
-    PlaylistsAdapter adapter;
-    SwipeRefreshLayout playlistsViewContainer;
+    TrackListAdapter adapter;
+    ArrayList<Song> tracksList = new ArrayList<>();
 
     LinearLayout layoutMiniPlayer;
     TextView txtSongNameMiniPlayer, txtSongArtistMiniPlayer;
@@ -48,15 +55,24 @@ public class Playlists extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_playlists);
+        setContentView(R.layout.activity_album_songs);
+        album = (Album) getIntent().getSerializableExtra(Constants.ALBUM_OBJECT);
 
+        viewAlbumArt = findViewById(R.id.view_album_art);
+        btnBack = findViewById(R.id.btn_back);
+        txtAlbumArtist = findViewById(R.id.txt_playlist_created_date);
         loading = findViewById(R.id.loading);
-        playlistsView = findViewById(R.id.playlists_view);
-        database = new Database(this);
-        adapter = new PlaylistsAdapter(this, playlists);
-        playlistsView.setAdapter(adapter);
-        playlistsViewContainer = findViewById(R.id.playlists_view_container);
-        playlistsViewContainer.setOnRefreshListener(this::refreshList);
+        txtAlbumArtist.setText(album.getArtist());
+        txtAlbumName = findViewById(R.id.txt_album_name);
+        txtAlbumName.setText(album.getName());
+        txtSongsCount = findViewById(R.id.txt_playlist_songs_count);
+        txtSongsCount.setText(album.getSongsCount() + " Songs");
+        albumTrackListView = findViewById(R.id.album_track_list);
+        albumTrackListView.setLayoutManager(new LinearLayoutManager(this));
+        albumTrackListContainer = findViewById(R.id.album_track_list_container);
+        albumTrackListContainer.setOnRefreshListener(this);
+        adapter = new TrackListAdapter(tracksList, this);
+        albumTrackListView.setAdapter(adapter);
 
         layoutMiniPlayer = findViewById(R.id.layout_miniplayer);
         txtSongNameMiniPlayer = findViewById(R.id.song_title_miniplayer);
@@ -80,39 +96,33 @@ public class Playlists extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (playlists.isEmpty()) {
-            final Handler handler = new Handler(Looper.getMainLooper());
-            handler.postDelayed(() -> {
-                playlists.addAll(database.getPlaylists());
-                adapter.notifyDataSetChanged();
-                Functions.showLoading(false, loading);
-            }, 1500);
-        } else {
-            if (playlists.size() != database.getPlaylists().size()) {
-                refreshList();
-            }
-        }
+        tracksList.clear();
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(() -> {
+            tracksList.addAll(SongsHandler.getAlbumSongs(album.getId(), this));
+            adapter.notifyDataSetChanged();
+            Functions.showLoading(false, loading);
+        }, 1500);
+
         if (!miniPlayerThread.isAlive()) {
             miniPlayerThread.start();
         }
+
+
     }
 
-    public void refreshList() {
-        playlistsViewContainer.setRefreshing(true);
-        playlists.clear();
-        playlists.addAll(database.getPlaylists());
-        adapter.notifyDataSetChanged();
-        playlistsViewContainer.setRefreshing(false);
-    }
-
-    public void onClick(View view) {
-        switch (view.getId()) {
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.btn_back:
                 onBackPressed();
                 break;
 
-            case R.id.btn_create_playlist:
-                DialogHandlers.showCreatePlaylistDialog(this, this, false);
+            case R.id.btn_play_all:
+                if (!tracksList.isEmpty()) {
+                    PlayerService.playAllSongs(this, tracksList);
+                } else {
+                    Toast.makeText(this, "No Songs in this Album!", Toast.LENGTH_SHORT).show();
+                }
                 break;
 
             case R.id.btn_play_miniplayer:
@@ -127,7 +137,20 @@ public class Playlists extends AppCompatActivity {
                 PlayerService.nextSong(this);
                 initMediaPlayer();
                 break;
+
+            case R.id.btn_edit_album:
+                startActivity(new Intent(this, EditAlbum.class).putExtra(Constants.ALBUM_OBJECT, album));
+                break;
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        tracksList.clear();
+        tracksList.addAll(SongsHandler.getAlbumSongs(album.getId(), this));
+        adapter.notifyDataSetChanged();
+        albumTrackListContainer.setRefreshing(false);
+        Toast.makeText(this, "Refreshed", Toast.LENGTH_SHORT).show();
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")

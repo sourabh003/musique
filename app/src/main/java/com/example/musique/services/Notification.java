@@ -9,7 +9,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 
 import androidx.core.app.NotificationCompat;
 
-import com.example.musique.Home;
+import com.example.musique.view.Home;
 import com.example.musique.R;
 import com.example.musique.utils.Constants;
 
