@@ -41,11 +41,6 @@ public class Playlists extends AppCompatActivity {
     PlaylistsAdapter adapter;
     SwipeRefreshLayout playlistsViewContainer;
 
-    LinearLayout layoutMiniPlayer;
-    TextView txtSongNameMiniPlayer, txtSongArtistMiniPlayer;
-    ImageView btnPlayMiniPlayer, btnNextMiniPlayer;
-    Thread miniPlayerThread;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,28 +53,6 @@ public class Playlists extends AppCompatActivity {
         playlistsView.setAdapter(adapter);
         playlistsViewContainer = findViewById(R.id.playlists_view_container);
         playlistsViewContainer.setOnRefreshListener(this::refreshList);
-
-        layoutMiniPlayer = findViewById(R.id.layout_miniplayer);
-        txtSongNameMiniPlayer = findViewById(R.id.song_title_miniplayer);
-        txtSongArtistMiniPlayer = findViewById(R.id.song_artist_miniplayer);
-        btnPlayMiniPlayer = findViewById(R.id.btn_play_miniplayer);
-        btnNextMiniPlayer = findViewById(R.id.btn_next_miniplayer);
-
-        miniPlayerThread = new Thread(() -> {
-            try {
-                while (true) {
-                    runOnUiThread(this::initMediaPlayer);
-                    Thread.sleep(1000);
-                }
-            } catch (InterruptedException e) {
-                Log.e(TAG, "onCreate: Mini Player Thread Exception", e);
-                e.printStackTrace();
-            } catch (IllegalStateException e){
-                Log.e(TAG, "onCreate: Mini Player Thread Exception", e);
-                e.printStackTrace();
-                miniPlayerThread.start();
-            }
-        });
     }
 
     @Override
@@ -96,9 +69,6 @@ public class Playlists extends AppCompatActivity {
             if (playlists.size() != database.getPlaylists().size()) {
                 refreshList();
             }
-        }
-        if (!miniPlayerThread.isAlive()) {
-            miniPlayerThread.start();
         }
     }
 
@@ -119,55 +89,6 @@ public class Playlists extends AppCompatActivity {
             case R.id.btn_create_playlist:
 //                startActivity();
                 break;
-
-            case R.id.btn_play_miniplayer:
-                updateMiniPlayerAction();
-                break;
-
-            case R.id.layout_miniplayer:
-                startActivity(new Intent(this, Player.class));
-                break;
-
-            case R.id.btn_next_miniplayer:
-                PlayerService.nextSong(this);
-                initMediaPlayer();
-                break;
         }
-    }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private void updateMiniPlayerPlayButton() {
-        if (mediaPlayer.isPlaying()) {
-            btnPlayMiniPlayer.setImageDrawable(getDrawable(R.drawable.ic_baseline_pause_24));
-        } else {
-            btnPlayMiniPlayer.setImageDrawable(getDrawable(R.drawable.ic_baseline_play_arrow_24));
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        miniPlayerThread.interrupt();
-    }
-
-    private void initMediaPlayer() {
-        if (mediaPlayer != null) {
-            layoutMiniPlayer.setVisibility(View.VISIBLE);
-            txtSongNameMiniPlayer.setText(currentSong.getTitle());
-            txtSongArtistMiniPlayer.setText(currentSong.getArtist());
-            final Handler handler = new Handler(Looper.getMainLooper());
-            handler.postDelayed(this::updateMiniPlayerPlayButton, 100);
-        } else {
-            layoutMiniPlayer.setVisibility(View.GONE);
-        }
-    }
-
-    private void updateMiniPlayerAction() {
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
-        } else {
-            mediaPlayer.start();
-        }
-        updateMiniPlayerPlayButton();
     }
 }

@@ -46,10 +46,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
     LinearLayout layoutLibraries, layoutFolders, layoutFavourites;
     LinearLayout layoutParent;
 
-    LinearLayout layoutMiniPlayer;
-    TextView txtSongNameMiniPlayer, txtSongArtistMiniPlayer;
-    ImageView btnPlayMiniPlayer, btnNextMiniPlayer;
-    Thread miniPlayerThread;
     ProgressBar loading;
     TextView viewNoPlaylists;
 
@@ -79,39 +75,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
         playListView = findViewById(R.id.playlists_view);
         loading = findViewById(R.id.loading);
         viewNoPlaylists = findViewById(R.id.view_no_playlists);
-
-        layoutMiniPlayer = findViewById(R.id.layout_miniplayer);
-        txtSongNameMiniPlayer = findViewById(R.id.song_title_miniplayer);
-        txtSongArtistMiniPlayer = findViewById(R.id.song_artist_miniplayer);
-        btnPlayMiniPlayer = findViewById(R.id.btn_play_miniplayer);
-        btnNextMiniPlayer = findViewById(R.id.btn_next_miniplayer);
-
-        miniPlayerThread = new Thread(() -> {
-            try {
-                while (true) {
-                    runOnUiThread(this::initMediaPlayer);
-                    Thread.sleep(1000);
-                }
-            } catch (InterruptedException e) {
-                Log.e(TAG, "onCreate: Mini Player Thread Exception", e);
-                e.printStackTrace();
-            }
-        });
-    }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private void updateMiniPlayerPlayButton() {
-        if (mediaPlayer.isPlaying()) {
-            btnPlayMiniPlayer.setImageDrawable(getDrawable(R.drawable.ic_baseline_pause_24));
-        } else {
-            btnPlayMiniPlayer.setImageDrawable(getDrawable(R.drawable.ic_baseline_play_arrow_24));
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        miniPlayerThread.interrupt();
     }
 
     @Override
@@ -123,9 +86,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
             Snackbar.make(layoutParent, "Please grant storage permission", Snackbar.LENGTH_INDEFINITE).setAction("Grant", v -> {
                 requestStoragePermission();
             }).show();
-        }
-        if (!miniPlayerThread.isAlive()) {
-            miniPlayerThread.start();
         }
         new Thread(() -> {
             PlayerService.favouriteSongsList.addAll(database.getFavouriteSongs());
@@ -208,18 +168,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
         }
     }
 
-    private void initMediaPlayer() {
-        if (mediaPlayer != null) {
-            layoutMiniPlayer.setVisibility(View.VISIBLE);
-            txtSongNameMiniPlayer.setText(currentSong.getTitle());
-            txtSongArtistMiniPlayer.setText(currentSong.getArtist());
-            final Handler handler = new Handler(Looper.getMainLooper());
-            handler.postDelayed(this::updateMiniPlayerPlayButton, 100);
-        } else {
-            layoutMiniPlayer.setVisibility(View.GONE);
-        }
-    }
-
     private void requestStoragePermission() {
         Dexter.withContext(this).withPermission(Manifest.permission.READ_EXTERNAL_STORAGE).withListener(new PermissionListener() {
             @Override
@@ -263,19 +211,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
                     startActivity(new Intent(this, Favorites.class));
                     break;
 
-                case R.id.btn_play_miniplayer:
-                    updateMiniPlayerAction();
-                    break;
-
-                case R.id.layout_miniplayer:
-                    startActivity(new Intent(this, Player.class));
-                    break;
-
-                case R.id.btn_next_miniplayer:
-                    PlayerService.nextSong(this);
-                    initMediaPlayer();
-                    break;
-
                 case R.id.btn_create_playlist:
                     startActivity(
                             new Intent(this, PlaylistInfo.class)
@@ -299,15 +234,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Ser
     private void refreshPlaylists() {
         playListView.removeAllViews();
         loadPlaylists();
-    }
-
-    private void updateMiniPlayerAction() {
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
-        } else {
-            mediaPlayer.start();
-        }
-        updateMiniPlayerPlayButton();
     }
 
     @Override

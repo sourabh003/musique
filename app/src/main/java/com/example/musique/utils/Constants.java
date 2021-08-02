@@ -26,4 +26,5 @@ public class Constants {
     public static final String PLAYLIST_ACTION_CREATE = "CREATE_PLAYLIST";
     public static final String PLAYLIST_ACTION_EDIT = "EDIT_PLAYLIST";
     public static final String PLAYLIST_ACTION = "PLAYLIST_ACTION";
+    public static final String DEFAULT_ALBUM_ART = "DEFAULT_ALBUM_ART";
 }

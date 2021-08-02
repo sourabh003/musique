@@ -15,6 +15,7 @@ import com.example.musique.utils.Functions;
 import com.example.musique.utils.SongsHandler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Database extends SQLiteOpenHelper {
@@ -41,7 +42,7 @@ public class Database extends SQLiteOpenHelper {
     public static final String ALBUM_ID = "album_id";
     public static final String ALBUM_ART = "album_art";
     public static final String CREATE_ALBUMS_TABLE = "CREATE TABLE " + ALBUMS_TABLE + " (" + ALBUM_ID + " TEXT NOT NULL UNIQUE, " + ALBUM_ART + " TEXT)";
-    public static final String GET_ALBUM_ART = "SELECT * FROM " + ALBUMS_TABLE;
+    public static final String GET_ALBUM_ARTS = "SELECT * FROM " + ALBUMS_TABLE;
 
     public Database(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -210,5 +211,15 @@ public class Database extends SQLiteOpenHelper {
             Toast.makeText(context, "Updating...", Toast.LENGTH_SHORT).show();
         }
         cursor.close();
+    }
+
+    public HashMap<String, String> getAlbumArts() {
+        HashMap<String, String> albumArts = new HashMap<>();
+        Cursor cursor = getDatabase().rawQuery(GET_ALBUM_ARTS, null, null);
+        while (cursor.moveToNext()) {
+            albumArts.put(cursor.getString(0), cursor.getString(1));
+        }
+        cursor.close();
+        return albumArts;
     }
 }

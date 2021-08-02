@@ -1,13 +1,12 @@
 package com.example.musique.helpers;
 
-import android.net.Uri;
-
 public class Song {
     String id;
     String title;
     String artist;
     String album;
     String data;
+    String albumId;
 
     public Song(String id, String title, String artist, String album, String data) {
         this.id = id;
@@ -15,6 +14,23 @@ public class Song {
         this.artist = artist;
         this.album = album;
         this.data = data;
+    }
+
+    public Song(String id, String title, String artist, String album, String data, String albumId) {
+        this.id = id;
+        this.title = title;
+        this.artist = artist;
+        this.album = album;
+        this.data = data;
+        this.albumId = albumId;
+    }
+
+    public String getAlbumId() {
+        return albumId;
+    }
+
+    public void setAlbumId(String albumId) {
+        this.albumId = albumId;
     }
 
     public String getId() {

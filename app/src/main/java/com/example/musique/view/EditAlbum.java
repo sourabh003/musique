@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.musique.R;
+import com.example.musique.database.Database;
 import com.example.musique.helpers.Album;
 import com.example.musique.utils.Constants;
 import com.example.musique.utils.Functions;
@@ -27,6 +28,9 @@ public class EditAlbum extends AppCompatActivity {
     TextView txtAlbumName;
     Album album;
     ImageView viewAlbumArt;
+    Database database;
+    Uri imageUri = null;
+    String oldImage = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,7 @@ public class EditAlbum extends AppCompatActivity {
         setContentView(R.layout.activity_edit_album);
         album = (Album) getIntent().getSerializableExtra(Constants.ALBUM_OBJECT);
 
+        database = new Database(this);
         viewAlbumArt = findViewById(R.id.view_album_art);
         txtAlbumName = findViewById(R.id.txt_album_name);
     }
@@ -41,14 +46,18 @@ public class EditAlbum extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
+        oldImage = album.getArt();
         txtAlbumName.setText(album.getName());
     }
 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_update_album:
-                Toast.makeText(this, "Updating album", Toast.LENGTH_SHORT).show();
+                try {
+                    updateAlbum();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
 
             case R.id.btn_back:
@@ -73,14 +82,22 @@ public class EditAlbum extends AppCompatActivity {
         super.onActivityResult(reqCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            final Uri imageUri = data.getData();
+            imageUri = data.getData();
             try {
                 Bitmap bitmap = Functions.getBitmapFromUri(this, imageUri);
                 Glide.with(this).load(Functions.compressBitmap(bitmap)).error(R.drawable.default_album_art_2).into(viewAlbumArt);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
+    }
+
+    private void updateAlbum() throws IOException {
+        if (imageUri != null){
+            album.setArt(Functions.saveImageToInternalStorage(this, Functions.getBitmapFromUri(this, imageUri)));
+        } else {
+            album.setArt("null");
+        }
+        database.updateAlbumArt(this, album);
     }
 }

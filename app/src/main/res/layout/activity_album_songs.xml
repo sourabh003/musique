@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    tools:context=".AlbumSongs">
+    tools:context=".view.AlbumSongs">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
@@ -169,8 +169,5 @@
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </LinearLayout>
-
-    <include layout="@layout/layout_miniplayer" />
-
 
 </RelativeLayout>

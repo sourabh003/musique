@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/colorBackground">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/album_list_container"
@@ -16,7 +16,7 @@
             android:id="@+id/album_list"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/colorBackground"
             android:columnWidth="10dp"
             android:gravity="center"
             android:horizontalSpacing="10dp"

@@ -43,14 +43,9 @@ public class FolderSongs extends AppCompatActivity implements SwipeRefreshLayout
     TrackListAdapter adapter;
 
     String folder;
-
     TextView txtFolderName, txtFolderSongCount;
     Button btnPlayAll;
 
-    LinearLayout layoutMiniPlayer;
-    TextView txtSongNameMiniPlayer, txtSongArtistMiniPlayer;
-    ImageView btnPlayMiniPlayer, btnNextMiniPlayer;
-    Thread miniPlayerThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,24 +66,6 @@ public class FolderSongs extends AppCompatActivity implements SwipeRefreshLayout
         folderSongsContainer.setOnRefreshListener(this);
         btnPlayAll = findViewById(R.id.btn_play_all);
 
-        layoutMiniPlayer = findViewById(R.id.layout_miniplayer);
-        txtSongNameMiniPlayer = findViewById(R.id.song_title_miniplayer);
-        txtSongArtistMiniPlayer = findViewById(R.id.song_artist_miniplayer);
-        btnPlayMiniPlayer = findViewById(R.id.btn_play_miniplayer);
-        btnNextMiniPlayer = findViewById(R.id.btn_next_miniplayer);
-
-        miniPlayerThread = new Thread(() -> {
-            try {
-                while (true) {
-                    runOnUiThread(this::initMediaPlayer);
-                    Thread.sleep(1000);
-                }
-            } catch (InterruptedException e) {
-                Log.e(TAG, "onCreate: Mini Player Thread Exception", e);
-                e.printStackTrace();
-            }
-        });
-
     }
 
     @Override
@@ -103,10 +80,6 @@ public class FolderSongs extends AppCompatActivity implements SwipeRefreshLayout
                 adapter.notifyDataSetChanged();
                 Functions.showLoading(false, loading);
             }, 1500);
-        }
-
-        if (!miniPlayerThread.isAlive()) {
-            miniPlayerThread.start();
         }
     }
 
@@ -134,58 +107,8 @@ public class FolderSongs extends AppCompatActivity implements SwipeRefreshLayout
                     Toast.makeText(this, "No Songs in this Folder!", Toast.LENGTH_SHORT).show();
                 }
                 break;
-
-            case R.id.btn_play_miniplayer:
-                updateMiniPlayerAction();
-                break;
-
-            case R.id.layout_miniplayer:
-                startActivity(new Intent(this, Player.class));
-                break;
-
-            case R.id.btn_next_miniplayer:
-                PlayerService.nextSong(this);
-                initMediaPlayer();
-                break;
         }
 
 
-    }
-
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private void updateMiniPlayerPlayButton() {
-        if (mediaPlayer.isPlaying()) {
-            btnPlayMiniPlayer.setImageDrawable(getDrawable(R.drawable.ic_baseline_pause_24));
-        } else {
-            btnPlayMiniPlayer.setImageDrawable(getDrawable(R.drawable.ic_baseline_play_arrow_24));
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        miniPlayerThread.interrupt();
-    }
-
-    private void initMediaPlayer() {
-        if (mediaPlayer != null) {
-            layoutMiniPlayer.setVisibility(View.VISIBLE);
-            txtSongNameMiniPlayer.setText(currentSong.getTitle());
-            txtSongArtistMiniPlayer.setText(currentSong.getArtist());
-            final Handler handler = new Handler(Looper.getMainLooper());
-            handler.postDelayed(this::updateMiniPlayerPlayButton, 100);
-        } else {
-            layoutMiniPlayer.setVisibility(View.GONE);
-        }
-    }
-
-    private void updateMiniPlayerAction() {
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
-        } else {
-            mediaPlayer.start();
-        }
-        updateMiniPlayerPlayButton();
     }
 }

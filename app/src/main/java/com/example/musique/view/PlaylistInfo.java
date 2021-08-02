@@ -34,11 +34,12 @@ public class PlaylistInfo extends AppCompatActivity {
     String oldImage;
     String ACTION;
     TextView txtPlaylistTitle;
+    Uri imageUri = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_playlist);
+        setContentView(R.layout.activity_playlist_info);
         Intent intent = getIntent();
         ACTION = intent.getExtras().getString(Constants.PLAYLIST_ACTION);
 
@@ -67,7 +68,7 @@ public class PlaylistInfo extends AppCompatActivity {
         }
     }
 
-    public void onClick(View view) {
+    public void onClick(View view) throws IOException {
         switch (view.getId()) {
             case R.id.btn_add_image:
                 addImage();
@@ -105,12 +106,10 @@ public class PlaylistInfo extends AppCompatActivity {
         super.onActivityResult(reqCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            final Uri imageUri = data.getData();
+            imageUri = data.getData();
             try {
                 Bitmap bitmap = Functions.getBitmapFromUri(this, imageUri);
                 Glide.with(this).load(Functions.compressBitmap(bitmap)).error(R.drawable.playlist).into(viewPlaylistImage);
-                String image = Functions.saveImageToInternalStorage(this, Functions.getBitmapFromUri(this, imageUri));
-                playlist.setImage(image);
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e(TAG, "onActivityResult: ", e);
@@ -118,19 +117,29 @@ public class PlaylistInfo extends AppCompatActivity {
         }
     }
 
-    private void createPlaylist() {
+    private void createPlaylist() throws IOException {
         String id = Functions.generateID();
         String time = String.valueOf(System.currentTimeMillis());
         playlist.setId(id);
         playlist.setCreatedDate(time);
+        if (imageUri != null) {
+            playlist.setImage(Functions.saveImageToInternalStorage(this, Functions.getBitmapFromUri(this, imageUri)));
+        } else {
+            playlist.setImage("null");
+        }
         Toast.makeText(this, "Playlist Created", Toast.LENGTH_SHORT).show();
         database.createPlaylist(playlist);
         finish();
     }
 
-    private void updatePlaylist() {
+    private void updatePlaylist() throws IOException {
+        if (imageUri != null) {
+            playlist.setImage(Functions.saveImageToInternalStorage(this, Functions.getBitmapFromUri(this, imageUri)));
+        }
         database.updatePlaylist(playlist);
-        Functions.deleteImageFromInternalStorage(this, oldImage);
+        if (!playlist.getImage().equals(oldImage)){
+            Functions.deleteImageFromInternalStorage(this, oldImage);
+        }
         Toast.makeText(this, "Playlist Updated", Toast.LENGTH_SHORT).show();
         finish();
     }

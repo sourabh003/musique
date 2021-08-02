@@ -1,4 +1,4 @@
-package com.example.musique.view;
+ package com.example.musique.view;
 
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -19,18 +19,13 @@ import com.example.musique.utils.Constants;
 public class Splash extends AppCompatActivity {
 
     ImageView imageLogo;
-    Notification notification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        notification = new Notification();
         setContentView(R.layout.activity_splash);
-        imageLogo = findViewById(R.id.image_logo);
-        registerReceiver(PlayerService.broadcastReceiver, new IntentFilter(Constants.BROADCAST_ACTION));
-        startService(new Intent(getBaseContext(), PlayerService.class));
 
+        imageLogo = findViewById(R.id.image_logo);
     }
 
     @Override

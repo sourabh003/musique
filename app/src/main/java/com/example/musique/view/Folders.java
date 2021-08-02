@@ -38,11 +38,6 @@ public class Folders extends AppCompatActivity implements View.OnClickListener, 
     ArrayList<String> folderList = new ArrayList<>();
     FolderListAdapter adapter;
 
-    LinearLayout layoutMiniPlayer;
-    TextView txtSongNameMiniPlayer, txtSongArtistMiniPlayer;
-    ImageView btnPlayMiniPlayer, btnNextMiniPlayer;
-    Thread miniPlayerThread;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,24 +51,6 @@ public class Folders extends AppCompatActivity implements View.OnClickListener, 
         adapter = new FolderListAdapter(folderList, this);
         folderListView.setAdapter(adapter);
         folderListContainer.setOnRefreshListener(this);
-
-        layoutMiniPlayer = findViewById(R.id.layout_miniplayer);
-        txtSongNameMiniPlayer = findViewById(R.id.song_title_miniplayer);
-        txtSongArtistMiniPlayer = findViewById(R.id.song_artist_miniplayer);
-        btnPlayMiniPlayer = findViewById(R.id.btn_play_miniplayer);
-        btnNextMiniPlayer = findViewById(R.id.btn_next_miniplayer);
-
-        miniPlayerThread = new Thread(() -> {
-            try {
-                while (true) {
-                    runOnUiThread(this::initMediaPlayer);
-                    Thread.sleep(1000);
-                }
-            } catch (InterruptedException e) {
-                Log.e(TAG, "onCreate: Mini Player Thread Exception", e);
-                e.printStackTrace();
-            }
-        });
     }
 
     @Override
@@ -88,9 +65,6 @@ public class Folders extends AppCompatActivity implements View.OnClickListener, 
                 Functions.showLoading(false, loading);
             }, 1500);
         }
-        if (!miniPlayerThread.isAlive()) {
-            miniPlayerThread.start();
-        }
     }
 
     @Override
@@ -98,19 +72,6 @@ public class Folders extends AppCompatActivity implements View.OnClickListener, 
         switch (v.getId()) {
             case R.id.btn_back:
                 onBackPressed();
-                break;
-
-            case R.id.btn_play_miniplayer:
-                updateMiniPlayerAction();
-                break;
-
-            case R.id.layout_miniplayer:
-                startActivity(new Intent(this, Player.class));
-                break;
-
-            case R.id.btn_next_miniplayer:
-                PlayerService.nextSong(this);
-                initMediaPlayer();
                 break;
         }
     }
@@ -125,39 +86,4 @@ public class Folders extends AppCompatActivity implements View.OnClickListener, 
         folderListContainer.setRefreshing(false);
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private void updateMiniPlayerPlayButton() {
-        if (mediaPlayer.isPlaying()) {
-            btnPlayMiniPlayer.setImageDrawable(getDrawable(R.drawable.ic_baseline_pause_24));
-        } else {
-            btnPlayMiniPlayer.setImageDrawable(getDrawable(R.drawable.ic_baseline_play_arrow_24));
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        miniPlayerThread.interrupt();
-    }
-
-    private void initMediaPlayer() {
-        if (mediaPlayer != null) {
-            layoutMiniPlayer.setVisibility(View.VISIBLE);
-            txtSongNameMiniPlayer.setText(currentSong.getTitle());
-            txtSongArtistMiniPlayer.setText(currentSong.getArtist());
-            final Handler handler = new Handler(Looper.getMainLooper());
-            handler.postDelayed(this::updateMiniPlayerPlayButton, 100);
-        } else {
-            layoutMiniPlayer.setVisibility(View.GONE);
-        }
-    }
-
-    private void updateMiniPlayerAction() {
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
-        } else {
-            mediaPlayer.start();
-        }
-        updateMiniPlayerPlayButton();
-    }
 }

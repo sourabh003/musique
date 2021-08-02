@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -35,6 +36,7 @@ public class SongsHandler {
                 MediaStore.Audio.Media.TITLE,
                 MediaStore.Audio.Media.DATA,
                 MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.ALBUM_ID
         }, selection, selectionArgs, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -43,6 +45,7 @@ public class SongsHandler {
                 String title = cursor.getString(2);
                 String data = cursor.getString(3);
                 String artist = cursor.getString(4);
+                String albumID = cursor.getString(5);
                 if (artist.equals(Constants.UNKNOWN_ARTIST)) {
                     artist = "Unknown Artist";
                 }
@@ -50,7 +53,7 @@ public class SongsHandler {
                         || !album.toLowerCase().equals("ringtone")
                         || !album.toLowerCase().equals("call_rec")) {
                     if (!title.contains("ringtone")) {
-                        Song song = new Song(id, title, artist, album, data);
+                        Song song = new Song(id, title, artist, album, data, albumID);
                         trackList.add(song);
                     }
                 }
@@ -102,6 +105,8 @@ public class SongsHandler {
     }
 
     public static List<Album> getAlbums(Context context) {
+        Database database = new Database(context);
+        HashMap<String, String> albumArts = database.getAlbumArts();
         List<Album> albums = new ArrayList<>();
         Uri uri = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
         Cursor cursor = context.getContentResolver().query(uri, new String[]{
@@ -118,8 +123,12 @@ public class SongsHandler {
             if (artist.equals(Constants.UNKNOWN_ARTIST)) {
                 artist = "Unknown Artist";
             }
+            String art = Constants.DEFAULT_ALBUM_ART;
+            if (albumArts.containsKey(id)) {
+                art = albumArts.get(id);
+            }
             Album album = new Album(
-                    id, name, artist, count
+                    id, name, artist, count, art
             );
             albums.add(album);
         }
@@ -159,7 +168,7 @@ public class SongsHandler {
                             || !album.toLowerCase().equals("ringtone")
                             || !album.toLowerCase().equals("call_rec")) {
                         if (!title.contains("ringtone")) {
-                            Song song = new Song(id, title, artist, album, data);
+                            Song song = new Song(id, title, artist, album, data, albumID);
                             trackList.add(song);
                         }
                     }
